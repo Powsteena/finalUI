@@ -1,0 +1,26 @@
+/* src/CSS/FormStyle.css */
+.form-container {
+  max-width: 400px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.text-dark-red {
+  color: #8F0E0E;
+}
+
+.text-orange {
+  color: #FA7E0A;
+  text-decoration: none;
+}
+
+.btn {
+  background-color: #FA7E0A;
+  color: #fff;
+  border: none;
+}
+
+.btn:hover {
+  background-color: #8F0E0E;
+  color: #fff;
+}

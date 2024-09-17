@@ -1,0 +1,13 @@
+.sidebar {
+    background-color: #343a40;
+  }
+  
+  .sidebar .nav-link {
+    padding: 15px;
+    color: #fff;
+  }
+  
+  .sidebar .nav-link:hover {
+    background-color: #495057;
+  }
+  
