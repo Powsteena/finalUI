@@ -8,6 +8,7 @@ import DriverLoginForm from './Components/DriverLoginForm';
 import UserDashboard from './Components/Userdashboard';
 import AdminDashboard from './Components/Admindashboard';
 import ManageUsers from './Components/ManageUsers'; // Import ManageUsers component
+import ManageDrivers from './Components/ManageDrivers'; // Import ManageDrivers component
 
 function App() {
   return (
@@ -20,8 +21,10 @@ function App() {
           <Route path="/driver-register" element={<DriverRegisterForm />} />
           <Route path="/driver-login" element={<DriverLoginForm />} />
           <Route path="/user-dashboard" element={<UserDashboard />} />
+          <Route path="/admin" element={<AdminDashboard />} /> {/* Add AdminDashboard route */}
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/users" element={<ManageUsers />} /> {/* Add ManageUsers route */}
+          <Route path="/admin-users" element={<ManageUsers />} /> {/* Add ManageUsers route */}
+          <Route path="/admin-drivers" element={<ManageDrivers />} />
         </Routes>
       </div>
     </Router>
