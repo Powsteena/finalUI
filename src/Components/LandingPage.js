@@ -4,15 +4,15 @@ import '../CSS/Landing.css';
 import logo from '../Images/logo.png'
 import heroimg from '../Images/hero.webp'
 import driver from '../Images/driver.jpg'
-import passenger from '../Images/passenger.jpg'
+// import passenger from '../Images/passenger.jpg'
 
 const LandingPage = () => {
   const navigate = useNavigate();
 
-  const handleGoRide = () => {
-    const isRegistered = localStorage.getItem('userRole') === 'passenger';
-    navigate(isRegistered ? '/login' : '/register');
-  };
+  // const handleGoRide = () => {
+  //   const isRegistered = localStorage.getItem('userRole') === 'passenger';
+  //   navigate(isRegistered ? '/login' : '/register');
+  // };
 
   const handlePublishRide = () => {
     const isDriverRegistered = localStorage.getItem('userRole') === 'driver';

@@ -1,34 +1,234 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 import '../CSS/UserDashboard.css';
+import { jwtDecode } from 'jwt-decode';
+
+// Fix for default marker icon issue with Leaflet and Webpack
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
 
 const UserDashboard = () => {
   const [pickup, setPickup] = useState('');
   const [dropoff, setDropoff] = useState('');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
+  const [pickupCoords, setPickupCoords] = useState(null);
+  const [dropoffCoords, setDropoffCoords] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
+  const [mapCenter, setMapCenter] = useState([9.6615, 80.0255]);
+  const [suggestions, setSuggestions] = useState([]);
+  const [activeInput, setActiveInput] = useState('');
+  const [vehicleType, setVehicleType] = useState('Car');
+  const [numPassengers, setNumPassengers] = useState(1);
 
-  const handleFindRides = () => {
-    // Implement the logic for finding rides
-    console.log('Finding rides from', pickup, 'to', dropoff, 'on', date, 'at', time);
+  const requestOptions = useMemo(() => ({
+    method: "GET",
+    headers: new Headers({
+      "x-rapidapi-key": "962111a97cmshe5fa71b93e2a226p128708jsn2f0b2b4e19e8",
+      "x-rapidapi-host": "map-geocoding.p.rapidapi.com",
+      "Accept": "application/json"
+    }),
+    redirect: "follow"
+  }), []);
+
+  const geocode = useCallback(async (latlng) => {
+    try {
+      const response = await fetch(
+        `https://map-geocoding.p.rapidapi.com/json?latlng=${latlng[0]},${latlng[1]}`,
+        requestOptions
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.results || [];
+    } catch (error) {
+      console.error('Error in geocoding:', error);
+      return [];
+    }
+  }, [requestOptions]);
+
+  useEffect(() => {
+    const fetchUserLocation = async () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const { latitude, longitude } = position.coords;
+            console.log("User Coordinates:", latitude, longitude);
+            setUserLocation([latitude, longitude]);
+            setMapCenter([latitude, longitude]);
+
+            const locationName = await geocode([latitude, longitude]);
+            console.log("Geocode Result:", locationName);
+            setPickup(locationName.length > 0 ? locationName[0].formatted_address : 'Unknown Location');
+            setPickupCoords([latitude, longitude]);
+          },
+          (error) => {
+            console.error("Error getting user location:", error);
+          }
+        );
+      }
+    };
+
+    fetchUserLocation();
+  }, [geocode]);
+
+  const fetchPlaceSuggestions = async (query) => {
+    try {
+      const response = await fetch(
+        `https://map-geocoding.p.rapidapi.com/json?address=${encodeURIComponent(query)}`,
+        requestOptions
+      );
+      const data = await response.json();
+      return data.results || [];
+    } catch (error) {
+      console.error('Error fetching geocoded location:', error);
+      return [];
+    }
   };
 
-  const handlePublishRide = () => {
-    // Implement the logic for publishing a ride
-    console.log('Publishing a ride from', pickup, 'to', dropoff, 'on', date, 'at', time);
+  const handleInputChange = async (e, setter, inputType) => {
+    const value = e.target.value;
+    setter(value);
+    setActiveInput(inputType);
+    if (value.length > 2) {
+      const places = await fetchPlaceSuggestions(value);
+      setSuggestions(places);
+    } else {
+      setSuggestions([]);
+    }
   };
+
+  const handleSuggestionSelect = (place, setter, coordsSetter) => {
+    setter(place.formatted_address);
+    coordsSetter([place.geometry.location.lat, place.geometry.location.lng]);
+    setSuggestions([]);
+    setActiveInput('');
+  };
+
+  const MapClickHandler = () => {
+    useMapEvents({
+      click: async (e) => {
+        const { lat, lng } = e.latlng;
+        const locationName = await geocode([lat, lng]);
+
+        if (!pickupCoords) {
+          setPickupCoords([lat, lng]);
+          setPickup(locationName.length > 0 ? locationName[0].formatted_address : 'Unknown Location');
+        } else if (!dropoffCoords) {
+          setDropoffCoords([lat, lng]);
+          setDropoff(locationName.length > 0 ? locationName[0].formatted_address : 'Unknown Location');
+        }
+      },
+    });
+    return null;
+  };
+  const handleSearchRide = async () => {
+    const token = localStorage.getItem('token'); 
+    console.log('Searching for a ride from', pickup, 'to', dropoff, 'with vehicle type', vehicleType, 'for', numPassengers, 'passengers.');
+    console.log('Pickup coordinates:', pickupCoords);
+    console.log('Dropoff coordinates:', dropoffCoords);
+
+    if (!token) {
+        console.error('No token found, user might not be logged in.');
+        alert('You must be logged in to request a ride.');
+        return; // Exit if no token is found
+    }
+
+    try {
+        // Decode the token to get user info
+        const decodedToken = jwtDecode(token);
+        console.log('Decoded token:', decodedToken);
+
+        const role = decodedToken.user?.role; // Adjust based on token payload
+        if (!role) {
+            throw new Error('Role not found in token');
+        }
+
+        console.log('User role:', role); // Log user role
+
+        const response = await fetch('http://localhost:5000/api/ride-request', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                pickup,
+                dropoff,
+                pickupCoords,
+                dropoffCoords,
+                vehicleType,
+                numPassengers,
+            }),
+        });
+
+        if (!response.ok) {
+            const errorResponse = await response.json(); // Get error response for detailed message
+            console.error('Error response:', errorResponse);
+            throw new Error(errorResponse.message || 'Failed to create ride request');
+        }
+
+        const data = await response.json();
+        console.log('Ride request created:', data);
+        alert('Ride request created successfully!');
+    } catch (error) {
+        console.error('Error creating ride request:', error);
+        alert(`Error creating ride request: ${error.message || 'Please try again.'}`);
+    }
+};
 
   return (
     <div className="dashboard">
-      <h2>Book Your Ride</h2>
+      <h2>Search for Your Ride</h2>
+      <div className="map-container">
+        <MapContainer center={mapCenter} zoom={13} style={{ width: '100%', height: 400 }}>
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          />
+          <MapClickHandler />
+          {userLocation && (
+            <Marker position={userLocation}>
+              <Popup>Your Location</Popup>
+            </Marker>
+          )}
+          {pickupCoords && (
+            <Marker position={pickupCoords}>
+              <Popup>Pickup Location: {pickup}</Popup>
+            </Marker>
+          )}
+          {dropoffCoords && (
+            <Marker position={dropoffCoords}>
+              <Popup>Drop-off Location: {dropoff}</Popup>
+            </Marker>
+          )}
+        </MapContainer>
+      </div>
       <div className="input-group">
         <label htmlFor="pickup">Pickup Location:</label>
         <input
           type="text"
           id="pickup"
           value={pickup}
-          onChange={(e) => setPickup(e.target.value)}
-          placeholder="Enter pickup location"
+          onChange={(e) => handleInputChange(e, setPickup, 'pickup')}
+          placeholder="Enter pickup location or click on map"
         />
+        {suggestions.length > 0 && activeInput === 'pickup' && (
+          <div className="suggestions">
+            {suggestions.map((place, index) => (
+              <div key={index} onClick={() => handleSuggestionSelect(place, setPickup, setPickupCoords)}>
+                {place.formatted_address}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       <div className="input-group">
         <label htmlFor="dropoff">Drop-off Location:</label>
@@ -36,32 +236,40 @@ const UserDashboard = () => {
           type="text"
           id="dropoff"
           value={dropoff}
-          onChange={(e) => setDropoff(e.target.value)}
-          placeholder="Enter drop-off location"
+          onChange={(e) => handleInputChange(e, setDropoff, 'dropoff')}
+          placeholder="Enter drop-off location or click on map"
         />
+        {suggestions.length > 0 && activeInput === 'dropoff' && (
+          <div className="suggestions">
+            {suggestions.map((place, index) => (
+              <div key={index} onClick={() => handleSuggestionSelect(place, setDropoff, setDropoffCoords)}>
+                {place.formatted_address}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       <div className="input-group">
-        <label htmlFor="date">Date:</label>
-        <input
-          type="date"
-          id="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
+        <label htmlFor="vehicle">Vehicle Type:</label>
+        <select id="vehicle" value={vehicleType} onChange={(e) => setVehicleType(e.target.value)}>
+          <option value="Car">Car</option>
+          <option value="Van">Van</option>
+          <option value="Motorbike">Motorbike</option>
+          <option value="Tuk Tuk">Tuk Tuk</option>
+        </select>
       </div>
       <div className="input-group">
-        <label htmlFor="time">Time:</label>
+        <label htmlFor="passengers">Number of Passengers:</label>
         <input
-          type="time"
-          id="time"
-          value={time}
-          onChange={(e) => setTime(e.target.value)}
+          type="number"
+          id="passengers"
+          value={numPassengers}
+          onChange={(e) => setNumPassengers(Number(e.target.value))}
+          min="1"
+          max="10"
         />
       </div>
-      <div className="actions">
-        <button className="btn btn-primary" onClick={handleFindRides}>Find Rides</button>
-        <button className="btn btn-secondary" onClick={handlePublishRide}>Publish Ride</button>
-      </div>
+      <button onClick={handleSearchRide}>Search Ride</button>
     </div>
   );
 };
