@@ -18,7 +18,7 @@ function ManageDrivers() {
         throw new Error('No token found, please log in.');
       }
 
-      const response = await axios.get('http://localhost:5000/api/admin/drivers', {
+      const response = await axios.get('http://localhost:5000/api/admin/driver', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setDrivers(response.data);
@@ -80,9 +80,9 @@ function ManageDrivers() {
           drivers.map((driver) => (
             <li key={driver._id} style={{border: '1px solid #ccc', padding: '1rem', marginBottom: '1rem', borderRadius: '0.25rem'}}>
               <p style={{fontWeight: 'bold'}}>{driver.username} ({driver.email})</p>
-              <p>Vehicle Type: {driver.vehicleType}</p>
-              <p>License Number: {driver.licenseNumber}</p>
-              <p>Documents: {driver.documents.join(', ')}</p>
+              <p>Vehicle Type: {driver.vehicleType || 'N/A'}</p>
+              <p>License Number: {driver.licenseNumber || 'N/A'}</p>
+              <p>Documents: {Array.isArray(driver.documents) ? driver.documents.join(', ') : 'None'}</p>
               <p>Status: {driver.isApproved ? 'Approved' : 'Pending'}</p>
               <p>Created At: {new Date(driver.createdAt).toLocaleString()}</p>
               <div style={{marginTop: '0.5rem'}}>

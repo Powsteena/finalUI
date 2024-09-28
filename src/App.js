@@ -9,6 +9,11 @@ import UserDashboard from './Components/Userdashboard';
 import AdminDashboard from './Components/Admindashboard';
 import ManageUsers from './Components/ManageUsers'; // Import ManageUsers component
 import ManageDrivers from './Components/ManageDrivers'; // Import ManageDrivers component
+import DriverDahboard from './Components/DriverDashboard';
+import CompletedRides from './Components/CompletedRides';
+import RideRequests from './Components/RideRequest';
+import PaymentInfo from './Components/PaymentInfo';
+
 
 function App() {
   return (
@@ -25,6 +30,10 @@ function App() {
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/admin-users" element={<ManageUsers />} /> {/* Add ManageUsers route */}
           <Route path="/admin-drivers" element={<ManageDrivers />} />
+          <Route path="/driver-dashboard" element={<DriverDahboard />} />
+          <Route path="/completed-rides" element={<CompletedRides />} />
+          <Route path="/ride-requests" element={<RideRequests />} />
+          <Route path="/payment-info" element={<PaymentInfo />} />
         </Routes>
       </div>
     </Router>

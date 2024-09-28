@@ -1,7 +1,7 @@
 // src/components/DriverLoginForm.js
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import '../CSS/FormStyle.css';
 
 function DriverLoginForm() {
@@ -13,6 +13,7 @@ function DriverLoginForm() {
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const navigate = useNavigate(); // Initialize useNavigate for navigation
 
   // Validate form inputs
   const validateForm = () => {
@@ -56,6 +57,9 @@ function DriverLoginForm() {
       setFormData({ email: '', password: '' });
       setErrors({});
       setServerError('');
+
+      // Navigate to the Driver Dashboard after successful login
+      navigate('/driver-dashboard');  // Navigate to the dashboard route
     } catch (error) {
       if (error.response?.status === 403) {
         setServerError('Your account is not approved yet.');
