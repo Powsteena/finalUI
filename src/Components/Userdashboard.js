@@ -29,23 +29,23 @@ const UserDashboard = () => {
     method: "GET",
     headers: new Headers({
       "x-rapidapi-key": "962111a97cmshe5fa71b93e2a226p128708jsn2f0b2b4e19e8",
-      "x-rapidapi-host": "map-geocoding.p.rapidapi.com",
+      "x-rapidapi-host": "google-map-places.p.rapidapi.com",
       "Accept": "application/json"
     }),
     redirect: "follow"
   }), []);
-
+  
   const geocode = useCallback(async (latlng) => {
     try {
       const response = await fetch(
-        `https://map-geocoding.p.rapidapi.com/json?latlng=${latlng[0]},${latlng[1]}`,
+        `https://google-map-places.p.rapidapi.com/maps/api/geocode/json?latlng=${latlng[0]},${latlng[1]}&language=en&region=en&location_type=APPROXIMATE`,
         requestOptions
       );
-
+  
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
+  
       const data = await response.json();
       return data.results || [];
     } catch (error) {
@@ -82,7 +82,7 @@ const UserDashboard = () => {
   const fetchPlaceSuggestions = async (query) => {
     try {
       const response = await fetch(
-        `https://map-geocoding.p.rapidapi.com/json?address=${encodeURIComponent(query)}`,
+        `https://google-map-places.p.rapidapi.com/maps/api/geocode/json?address=${encodeURIComponent(query)}&language=en&region=en&result_type=administrative_area_level_1`,
         requestOptions
       );
       const data = await response.json();
@@ -92,7 +92,6 @@ const UserDashboard = () => {
       return [];
     }
   };
-
   const handleInputChange = async (e, setter, inputType) => {
     const value = e.target.value;
     setter(value);
