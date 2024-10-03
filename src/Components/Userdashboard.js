@@ -177,10 +177,33 @@ const UserDashboard = () => {
         const data = await response.json();
         console.log('Ride request created:', data);
         alert('Ride request created successfully!');
-    } catch (error) {
-        console.error('Error creating ride request:', error);
-        alert(`Error creating ride request: ${error.message || 'Please try again.'}`);
-    }
+    // Notify nearby drivers
+    const notifyResponse = await fetch('http://localhost:5000/api/ride-request', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+          pickupCoords,
+          dropoffCoords,
+          vehicleType,
+          numPassengers,
+      }),
+  });
+
+  if (!notifyResponse.ok) {
+      const errorResponse = await notifyResponse.json(); // Get error response for detailed message
+      console.error('Error notifying drivers:', errorResponse);
+      throw new Error(errorResponse.message || 'Failed to notify drivers');
+  }
+
+  console.log('Drivers notified successfully!');
+
+} catch (error) {
+  console.error('Error creating ride request:', error);
+  alert(`Error creating ride request: ${error.message || 'Please try again.'}`);
+}
 };
 
   return (
@@ -274,3 +297,4 @@ const UserDashboard = () => {
 };
 
 export default UserDashboard;
+
