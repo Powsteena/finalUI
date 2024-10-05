@@ -1,3 +1,4 @@
+
 // import React, { useState, useEffect } from 'react';
 // import CompletedRides from './CompletedRides';
 // import RideRequests from './RideRequest';
@@ -18,7 +19,7 @@
 //     } else {
 //       setAddress('');
 //       setNearbyPlaces([]);
-//       updateDriverStatus('', false); // Set availability to false without address
+//       updateDriverStatus(false, '');
 //     }
 //     setIsAvailable(!isAvailable);
 //   };
@@ -45,7 +46,7 @@
 //     try {
 //       const response = await axios.get(apiUrl, {
 //         headers: {
-//           'x-rapidapi-key': 'YOUR_RAPIDAPI_KEY', // Use your own API key
+//           'x-rapidapi-key': '962111a97cmshe5fa71b93e2a226p128708jsn2f0b2b4e19e8',
 //           'x-rapidapi-host': 'google-map-places.p.rapidapi.com',
 //         },
 //       });
@@ -54,7 +55,7 @@
 //         setAddress(formattedAddress);
 //         loadGoogleMap(latitude, longitude);
 //         fetchNearbyPlaces(formattedAddress);
-//         updateDriverStatus(formattedAddress, true); // Send the address here
+//         updateDriverStatus(true, formattedAddress);
 //       } else {
 //         setLocationError('Unable to fetch address.');
 //       }
@@ -83,13 +84,13 @@
 //     }
 //   };
 
-//   const updateDriverStatus = async (address, availability) => {
+//   const updateDriverStatus = async (availability, driverAddress) => {
 //     try {
 //       const driverId = localStorage.getItem('driverId');
 //       const response = await axios.post('http://localhost:5000/api/driver/update-availability', {
 //         driverId,
 //         isAvailable: availability,
-//         address, // Send the address instead of latitude and longitude
+//         address: driverAddress,
 //       });
 //       console.log('Driver status updated successfully:', response.data);
 //     } catch (error) {
@@ -113,12 +114,6 @@
 //       setMapLoaded(true);
 //     }
 //   };
-
-//   useEffect(() => {
-//     if (!isAvailable) {
-//       updateDriverStatus('', false); // Reset status when unavailable
-//     }
-//   }, [isAvailable]);
 
 //   return (
 //     <div className="dashboard-container">
@@ -160,32 +155,34 @@
 
 // export default DriverDashboard;
 
-
-
-
-
-
 import React, { useState, useEffect } from 'react';
 import CompletedRides from './CompletedRides';
 import RideRequests from './RideRequest';
 import PaymentInfo from './PaymentInfo';
 import '../CSS/DriverDashboard.css';
 import axios from 'axios';
+import io from 'socket.io-client';
+
+// Initialize the Socket.io client
+const socket = io('http://localhost:5000'); // Update with your server URL
 
 const DriverDashboard = () => {
   const [isAvailable, setIsAvailable] = useState(false);
   const [locationError, setLocationError] = useState('');
   const [mapLoaded, setMapLoaded] = useState(false);
   const [address, setAddress] = useState('');
+  const [coordinates, setCoordinates] = useState({ latitude: null, longitude: null });
   const [nearbyPlaces, setNearbyPlaces] = useState([]);
+  const [newRideRequest, setNewRideRequest] = useState(null);
 
   const toggleAvailability = () => {
     if (!isAvailable) {
       getLiveLocation();
     } else {
       setAddress('');
+      setCoordinates({ latitude: null, longitude: null });
       setNearbyPlaces([]);
-      updateDriverStatus(false, '');
+      updateDriverStatus(false, '', { latitude: null, longitude: null });
     }
     setIsAvailable(!isAvailable);
   };
@@ -197,6 +194,7 @@ const DriverDashboard = () => {
           const { latitude, longitude } = position.coords;
           setLocationError('');
           fetchAddress(latitude, longitude);
+          setCoordinates({ latitude, longitude });
         },
         (error) => {
           setLocationError('Unable to retrieve your location.');
@@ -221,7 +219,7 @@ const DriverDashboard = () => {
         setAddress(formattedAddress);
         loadGoogleMap(latitude, longitude);
         fetchNearbyPlaces(formattedAddress);
-        updateDriverStatus(true, formattedAddress);
+        updateDriverStatus(true, formattedAddress, { latitude, longitude });
       } else {
         setLocationError('Unable to fetch address.');
       }
@@ -250,13 +248,16 @@ const DriverDashboard = () => {
     }
   };
 
-  const updateDriverStatus = async (availability, driverAddress) => {
+  const updateDriverStatus = async (availability, driverAddress, coordinates) => {
     try {
       const driverId = localStorage.getItem('driverId');
       const response = await axios.post('http://localhost:5000/api/driver/update-availability', {
         driverId,
         isAvailable: availability,
-        address: driverAddress,
+        liveLocation: {
+          address: driverAddress,
+          coordinates: [coordinates.longitude, coordinates.latitude], // Change this to an array
+        },
       });
       console.log('Driver status updated successfully:', response.data);
     } catch (error) {
@@ -281,6 +282,19 @@ const DriverDashboard = () => {
     }
   };
 
+  // Socket.io listener for new ride requests
+  useEffect(() => {
+    // Listen for 'newRideRequest' event
+    socket.on('newRideRequest', (rideData) => {
+      setNewRideRequest(rideData); // Store ride request data
+      alert('New ride request received!'); // Show notification
+    });
+
+    return () => {
+      socket.off('newRideRequest');
+    };
+  }, []);
+
   return (
     <div className="dashboard-container">
       <h1>Driver Dashboard</h1>
@@ -298,6 +312,11 @@ const DriverDashboard = () => {
           <h3>Your Current Location</h3>
           <div id="map" style={{ width: '100%', height: '400px' }}></div>
           {address && <p><strong>Address:</strong> {address}</p>}
+          {coordinates.latitude && coordinates.longitude && (
+            <p>
+              <strong>Coordinates:</strong> Latitude: {coordinates.latitude}, Longitude: {coordinates.longitude}
+            </p>
+          )}
         </div>
       )}
 
@@ -315,9 +334,16 @@ const DriverDashboard = () => {
       <RideRequests />
       <CompletedRides />
       <PaymentInfo />
+
+      {newRideRequest && (
+        <div className="ride-request-notification">
+          <h2>New Ride Request</h2>
+          <p>Pickup Location: {newRideRequest.pickupLocation}</p>
+          <p>Destination: {newRideRequest.destination}</p>
+        </div>
+      )}
     </div>
   );
 };
 
 export default DriverDashboard;
-
