@@ -69,7 +69,7 @@ const LandingPage = () => {
 
       <footer>
         <div className="container">
-          <p>&copy; 2024 Your Ride Sharing App. All rights reserved.</p>
+          <p>&copy; 2024 wayX. All rights reserved.</p>
           <a href="#contact">Contact Us</a>
         </div>
       </footer>

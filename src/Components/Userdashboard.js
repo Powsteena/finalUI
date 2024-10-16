@@ -130,7 +130,7 @@ const UserDashboard = () => {
   };
   const handleSearchRide = async () => {
     const token = localStorage.getItem('token'); 
-    if (!pickupCoords || !dropoffCoords) {
+    if (!pickupCoords || !dropoffCoords || !pickup || !dropoff || !vehicleType || !numPassengers) {
       alert('Please select valid pickup and dropoff locations.');
       return; // Exit early if coordinates are missing
     }
@@ -150,12 +150,28 @@ const UserDashboard = () => {
       const decodedToken = jwtDecode(token);
       console.log('Decoded token:', decodedToken);
   
-      const role = decodedToken.user?.role; // Adjust based on token payload
+      const role = decodedToken.user?.role; 
       if (!role) {
         throw new Error('Role not found in token');
       }
   
-      console.log('User role:', role); // Log user role
+      console.log('User role:', role);
+  
+
+      const requestBody = {
+        pickup: {
+          address: pickup,
+          coordinates: pickupCoords.slice().reverse() 
+        },
+        dropoff: {
+          address: dropoff,
+          coordinates: dropoffCoords.slice().reverse() 
+        },
+        vehicleType,
+        numPassengers,
+      };
+  
+      console.log('Sending request:', JSON.stringify(requestBody, null, 2));
   
       const response = await fetch('http://localhost:5000/api/ride-request', {
         method: 'POST',
@@ -163,30 +179,19 @@ const UserDashboard = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({
-          pickup: {
-            address: pickup,
-            coordinates: pickupCoords.reverse() // Reverse to [longitude, latitude]
-          },
-          dropoff: {
-            address: dropoff,
-            coordinates: dropoffCoords.reverse() // Reverse to [longitude, latitude]
-          },
-          vehicleType,
-          numPassengers,
-        }),
+        body: JSON.stringify(requestBody),
       });
   
       if (!response.ok) {
-        const errorResponse = await response.json(); // Get error response for detailed message
-        console.error('Error response:', errorResponse);
+        const errorResponse = await response.json();
         throw new Error(errorResponse.message || 'Failed to create ride request');
       }
   
       const data = await response.json();
       console.log('Ride request created:', data);
       alert('Ride request created successfully!');
-  
+
+
       // Notify nearby drivers
       const notifyResponse = await fetch('http://localhost:5000/api/ride-request', {
         method: 'POST',

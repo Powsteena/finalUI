@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
 import LoginForm from './Components/LoginForm';
 import RegisterForm from './Components/RegisterForm';
 import LandingPage from './Components/LandingPage';
@@ -7,12 +8,13 @@ import DriverRegisterForm from './Components/DriverRegisterForm';
 import DriverLoginForm from './Components/DriverLoginForm';
 import UserDashboard from './Components/Userdashboard';
 import AdminDashboard from './Components/Admindashboard';
-import ManageUsers from './Components/ManageUsers'; // Import ManageUsers component
-import ManageDrivers from './Components/ManageDrivers'; // Import ManageDrivers component
+import ManageUsers from './Components/ManageUsers'; 
+import ManageDrivers from './Components/ManageDrivers';
 import DriverDashboard from './Components/DriverDashboard';
 import CompletedRides from './Components/CompletedRides';
 import RideRequests from './Components/RideRequest';
 import PaymentInfo from './Components/PaymentInfo';
+import ManageRides from './Components/ManageRides';
 
 
 function App() {
@@ -34,6 +36,7 @@ function App() {
           <Route path="/completed-rides" element={<CompletedRides />} />
           <Route path="/ride-requests" element={<RideRequests />} />
           <Route path="/payment-info" element={<PaymentInfo />} />
+          <Route path="/admin-rides" element={<ManageRides />} />
         </Routes>
       </div>
     </Router>

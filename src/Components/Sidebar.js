@@ -23,7 +23,7 @@ const Sidebar = () => {
           </Link>
         </li>
         <li className="nav-item">
-          <Link to="/admin/rides" className="nav-link text-white">
+          <Link to="/admin-rides" className="nav-link text-white">
             Manage Rides
           </Link>
         </li>
