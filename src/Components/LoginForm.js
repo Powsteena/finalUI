@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import '../CSS/FormStyle.css';
 import { jwtDecode } from 'jwt-decode';
+import login from '../Images/login.webp';
  // Importing correctly
 
 function LoginForm() {
@@ -103,14 +104,88 @@ function LoginForm() {
     }
   };
 
-  return (
-    <div className="container d-flex justify-content-center align-items-center min-vh-100">
-      <div className="form-container bg-white p-5 rounded shadow">
-        <h2 className="text-center mb-4 text-dark-red">Welcome Back!</h2>
+// return (
+//   <div className="container d-flex justify-content-center align-items-center min-vh-100">
+//     <div className="row w-100">
+//       {/* Left Side with Image */}
+//       <div className="col-md-6 d-none d-md-block">
+//         <img
+//         src={login} alt="Login"
+//           className="img-fluid vh-100"
+//           style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+//         />
+//       </div>
+
+//       {/* Right Side with Login Form */}
+//       <div className="col-md-6 d-flex justify-content-center align-items-center">
+//         <div className="form-container w-100">
+//           <h2 className="text-center mb-4 text-dark-red">Welcome Back!</h2>
+//           {serverError && <p className="text-danger text-center">{serverError}</p>}
+//           {successMessage && <p className="text-success text-center">{successMessage}</p>}
+//           <form onSubmit={handleSubmit}>
+//             <div className="form-group">
+//               <input
+//                 type="email"
+//                 name="email"
+//                 className="form-control"
+//                 placeholder="Email"
+//                 value={formData.email}
+//                 onChange={handleChange}
+//                 required
+//               />
+//               {errors.email && <p className="text-danger">{errors.email}</p>}
+//             </div>
+//             <div className="form-group">
+//               <input
+//                 type="password"
+//                 name="password"
+//                 className="form-control"
+//                 placeholder="Password"
+//                 value={formData.password}
+//                 onChange={handleChange}
+//                 required
+//               />
+//               {errors.password && <p className="text-danger">{errors.password}</p>}
+//             </div>
+//             <button type="submit" className="btn w-100 mt-3">Login</button>
+//             <p className="text-center mt-3">
+//               <Link to="/register" className="text-orange">Don't have an account? Register</Link>
+//             </p>
+//           </form>
+//         </div>
+//       </div>
+//     </div>
+//   </div>
+// );
+// }
+
+
+return (
+  <div
+    className="container-fluid d-flex justify-content-start align-items-center min-vh-100"
+    style={{
+      backgroundImage: `url(${login})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      height: '100vh',
+    }}
+  >
+    {/* Left Side with Login Form */}
+    <div
+      className="col-md-4 d-flex justify-content-center align-items-center"
+      style={{
+        // backgroundColor: 'rgba(255, 255, 255, 0.85)', // Semi-transparent white background
+        height: '100vh',
+        padding: '20px',
+      }}
+    >
+      <div className="form-container w-100 p-4 shadow-lg rounded">
+        <h2 className="h1 text-center mb-4">Welcome Back!</h2>
         {serverError && <p className="text-danger text-center">{serverError}</p>}
         {successMessage && <p className="text-success text-center">{successMessage}</p>}
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
+          <div className="form-group mb-3">
             <input
               type="email"
               name="email"
@@ -122,7 +197,7 @@ function LoginForm() {
             />
             {errors.email && <p className="text-danger">{errors.email}</p>}
           </div>
-          <div className="form-group">
+          <div className="form-group mb-3">
             <input
               type="password"
               name="password"
@@ -134,14 +209,15 @@ function LoginForm() {
             />
             {errors.password && <p className="text-danger">{errors.password}</p>}
           </div>
-          <button type="submit" className="btn w-100 mt-3">Login</button>
+          <button type="submit" className="btn btn-dark-red w-100 mt-3">Login</button>
           <p className="text-center mt-3">
             <Link to="/register" className="text-orange">Don't have an account? Register</Link>
           </p>
         </form>
       </div>
     </div>
-  );
+  </div>
+);
 }
 
 export default LoginForm;

@@ -1,231 +1,242 @@
 :root {
-    --primary-color: #530C0C;
-    --secondary-color: #F7F6DE;
-    --accent-color: #FA7E0A;
-    --text-color: #333;
-  }
-  
-  body {
-    font-family: 'Poppins', sans-serif;
-    line-height: 1.6;
-    color: var(--text-color);
-    background-color: var(--secondary-color);
-    margin: 0;
-    padding: 0;
-  }
-  
-  .container {
-    width: 90%;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  .navbar {
-    background-color: var(--primary-color);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 1rem 0;
-  }
-  
-  .navbar .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .navbar-brand {
-    display: flex;
-    align-items: center;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--secondary-color);
-    text-decoration: none;
-  }
-  
-  /* .navbar-brand img {
-    height: 40px;
-    width: auto;
-    margin-right: 10px;
-  } */
+  --primary-color: #530C0C;
+  --secondary-color: #F7F6DE;
+  --accent-color: #FA7E0A;
+  --text-color: #333;
+}
 
-  .navbar-brand .logo {
-    width: 80px; /* Increase width as needed */
-    height: auto; /* Maintain aspect ratio */
-    object-fit: contain; /* Optional: ensures the logo scales well */
-  }
+body {
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--secondary-color);
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.navbar {
+  background-color: var(--primary-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 0.1rem 15px; 
+  border-radius: 70px;
+  position: fixed; 
+  left: 12px;
+  top: 10px;
+  width: 98%; 
+  z-index: 1000;
+}
+
+.navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--secondary-color);
+  text-decoration: none;
+}
+
+.navbar-brand .logo {
+  width: 90px; /* Increased width to zoom in the logo */
+  height: auto; /* Maintain aspect ratio */
+  object-fit: contain; /* Ensures the logo scales well */
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  margin-left: 20px;
+}
+
+.nav-links a {
+  color: var(--secondary-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  padding: 5px;
+}
+
+.nav-links a:hover {
+  color: var(--accent-color);
+}
+
+.btn {
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  color: white; /* Adjust color as needed */
+}
+
+.btn-primary {
+  background-color: #fa7e0a; /* Primary button color */
+}
+
+.btn-secondary {
+  background-color: #530c0c; /* Secondary button color */
+}
+
+.btn-small {
+  padding: 4px 10px;  
+}
+
+.btn:hover {
+  opacity: 0.8; /* Optional hover effect */
+}
+
+.hero {
+  padding: 4rem 0;
+  background-color: var(--secondary-color);
+}
+
+.hero .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hero-content {
+  flex: 1;
+  max-width: 50%;
+  font-weight: 900;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+  font-weight: 950;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: var(--primary-color);
+}
+
+.hero-image {
+  flex: 1;
+  text-align: right;
+}
+
+.hero-image img {
+  max-width: 100%;
+  border-radius: 10px;
+}
+
+.features .container {
+  display: flex;
+  flex-direction: row; /* Ensures image and text are side by side */
+  align-items: center;
+  gap: 5rem; /* Adds space between image and text */
+}
+
+.feature-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+}
+
+.feature-image img {
+  width: 100%;
+  max-width: 400px; /* Adjust the size as needed */
+  border-radius: 10px;
   
-  .nav-links {
-    list-style: none;
-    display: flex;
-    list-style: none;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .nav-links li {
-    margin-left: 20px;
-  }
-  
-  .nav-links a {
-    color: var(--secondary-color);
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease;
-    padding: 5px;
-  }
-  
-  .nav-links a:hover {
-    color: var(--accent-color);
-  }
-  .btn {
-    padding: 6px 12px;
-    border-radius: 4px;
-    text-decoration: none;
-    color: white; /* Adjust color as needed */
-    /* font-size: 12px; */
-  }
-  .btn-primary {
-    background-color: #fa7e0a; /* Primary button color */
-  }
-  
-  .btn-secondary {
-    background-color: #530c0c; /* Secondary button color */
-  }
-  
-  .btn-small {
-    padding: 4px 10px; /* Reduced padding for smaller buttons */
-  }
-  .btn:hover {
-    opacity: 0.8; /* Optional hover effect */
-  }
-  .hero {
-    padding: 4rem 0;
-    background-color: var(--secondary-color);
-  }
-  
+}
+
+.feature-text {
+  flex: 1;
+  padding: 70px;
+}
+
+.feature-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.feature-text h2 {
+  margin-bottom: 10px;
+  font-size: 30px;
+  color: #333;
+  font-weight: 500;
+}
+
+.feature-text p {
+  margin-bottom: 20px;
+  font-size: 16px;
+  text-align: center;
+}
+
+
+.btn {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  /* transition: background-color 0.3s ease, transform 0.3s ease; */
+  color: var(--accent-color);
+  color: #F7F6DE;
+}
+
+footer {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  padding: 0.4rem 0;
+  text-align: center;
+}
+
+footer a {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
   .hero .container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
   }
-  
+
   .hero-content {
-    flex: 1;
-    max-width: 50%;
-  }
-  
-  .hero h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    color: var(--primary-color);
-    font-weight: bold;
-  }
-  
-  .hero p {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-    color: var(--primary-color);
-  }
-  
-  .hero-image {
-    flex: 1;
-    text-align: right;
-  }
-  
-  .hero-image img {
     max-width: 100%;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .features {
-    padding: 4rem 0;
-    background-color: var(--secondary-color);
-  }
-  
-  .feature-card {
-    background-color: white;
-    border-radius: 10px;
-    padding: 2rem;
     margin-bottom: 2rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-    text-align: center;
   }
-  
-  .feature-card:hover {
-    transform: translateY(-5px);
+
+  .features .container {
+    flex-direction: column;
   }
-  
-  .feature-card img {
-    width: 100%;
-    border-radius: 10px;
-    margin-bottom: 1rem;
+}
+
+@media (min-width: 769px) {
+  .features .container {
+    display: flex;
+    gap: 2rem;
   }
-  
-  .feature-card h2 {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-    color: var(--primary-color);
+
+  .feature-card {
+    flex: 1;
   }
-  
-  .btn {
-    display: inline-block;
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-  }
-  
-  .btn-primary, .btn-secondary {
-    background-color: var(--accent-color);
-    color: var(--secondary-color);
-  }
-  
-  .btn:hover {
-    transform: translateY(-2px);
-    opacity: 0.9;
-  }
-  
-  footer {
-    background-color: var(--primary-color);
-    color: var(--secondary-color);
-    padding: 2rem 0;
-    text-align: center;
-  }
-  
-  footer a {
-    color: var(--accent-color);
-    text-decoration: none;
-    font-weight: 500;
-  }
-  
-  @media (max-width: 768px) {
-    .hero .container {
-      flex-direction: column;
-    }
-  
-    .hero-content {
-      max-width: 100%;
-      margin-bottom: 2rem;
-    }
-  
-    .features .container {
-      flex-direction: column;
-    }
-  }
-  
-  @media (min-width: 769px) {
-    .features .container {
-      display: flex;
-      gap: 2rem;
-    }
-  
-    .feature-card {
-      flex: 1;
-    }
-  }
+}

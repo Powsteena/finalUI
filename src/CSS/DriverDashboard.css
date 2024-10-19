@@ -31,7 +31,7 @@
   }
   
   button {
-    margin-left: 10px;
+    /* margin-left: 10px; */
     padding: 5px 10px;
     cursor: pointer;
   }

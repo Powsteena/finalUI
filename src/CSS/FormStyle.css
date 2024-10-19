@@ -1,8 +1,6 @@
 /* src/CSS/FormStyle.css */
 .form-container {
   max-width: 400px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .text-dark-red {
@@ -17,10 +15,17 @@
 .btn {
   background-color: #FA7E0A;
   color: #fff;
-  border: none;
+  border-color: #8F0E0E ;
 }
-
+/* 
 .btn:hover {
   background-color: #8F0E0E;
   color: #fff;
+} */
+.h1,h2{
+  font-weight: 1000;
+  color: #FA7E0A;
+ }
+ .form-container h2 {
+  color: #FA7E0A;
 }
