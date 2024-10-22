@@ -4,6 +4,7 @@ import '../CSS/Landing.css';
 import logo from '../Images/logo.png'
 import heroimg from '../Images/hero.png'
 import driver from '../Images/driver.jpg'
+import Contact from './Contact';
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -63,6 +64,15 @@ const LandingPage = () => {
     </div>
   </div>
 </section>
+
+<section id="contact" className="contact-section">
+        <div className="container">
+          <h2>Contact Us</h2>
+          <p>If you have any questions or need assistance, feel free to reach out to us.</p>
+          <Contact /> 
+        </div>
+      </section>
+
       <footer>
         <div className="container">
           <p>&copy; 2024 wayX. All rights reserved.</p>
@@ -72,5 +82,6 @@ const LandingPage = () => {
     </div>
   );
 };
+
 
 export default LandingPage;

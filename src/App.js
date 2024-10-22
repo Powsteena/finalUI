@@ -17,6 +17,7 @@ import PaymentInfo from './Components/PaymentInfo';
 import ManageRides from './Components/ManageRides';
 
 
+
 function App() {
   return (
     <Router>
@@ -37,6 +38,7 @@ function App() {
           <Route path="/ride-requests" element={<RideRequests />} />
           <Route path="/payment-info" element={<PaymentInfo />} />
           <Route path="/admin-rides" element={<ManageRides />} />
+          
         </Routes>
       </div>
     </Router>
