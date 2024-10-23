@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react';
 import CompletedRides from './CompletedRides';
 import RideRequests from './RideRequest';
@@ -132,7 +130,7 @@ const DriverDashboard = () => {
     // Listen for 'newRideRequest' event
     socket.on('newRideRequest', (rideData) => {
       setNewRideRequest(rideData); // Store ride request data
-      alert('New ride request received!'); // Show notification
+      alert('New ride request received!');
     });
 
     return () => {

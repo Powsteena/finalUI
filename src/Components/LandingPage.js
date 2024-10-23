@@ -5,6 +5,7 @@ import logo from '../Images/logo.png'
 import heroimg from '../Images/hero.png'
 import driver from '../Images/driver.jpg'
 import Contact from './Contact';
+import About from './About';
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ const LandingPage = () => {
       </header>
 
 
-<section className="features">
+<section className="features" style={{ backgroundColor: ' rgba(192, 120, 120, 0.4)' }}>
   <div className="container">
     <div className="feature-card driver">
       <div className="feature-image">
@@ -71,6 +72,10 @@ const LandingPage = () => {
           <p>If you have any questions or need assistance, feel free to reach out to us.</p>
           <Contact /> 
         </div>
+      </section>
+
+      <section id="about">
+        <About />
       </section>
 
       <footer>

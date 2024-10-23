@@ -1,13 +1,10 @@
 .sidebar {
-    background-color: #343a40;
+    background-color: #FA7E0A;
   }
   
   .sidebar .nav-link {
     padding: 15px;
-    color: #fff;
+    color: #530C0C;
   }
   
-  .sidebar .nav-link:hover {
-    background-color: #495057;
-  }
   

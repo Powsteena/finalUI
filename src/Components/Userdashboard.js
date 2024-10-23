@@ -222,33 +222,35 @@ const UserDashboard = () => {
   };
   
 
-  return (
-    <div className="dashboard">
+return (
+  <div className="dashboard-container">
+    <div className="map-section">
+      <MapContainer center={mapCenter} zoom={13} style={{ width: '100%', height: '500px' }}>
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        <MapClickHandler />
+        {userLocation && (
+          <Marker position={userLocation}>
+            <Popup>Your Location</Popup>
+          </Marker>
+        )}
+        {pickupCoords && (
+          <Marker position={pickupCoords}>
+            <Popup>Pickup Location: {pickup}</Popup>
+          </Marker>
+        )}
+        {dropoffCoords && (
+          <Marker position={dropoffCoords}>
+            <Popup>Drop-off Location: {dropoff}</Popup>
+          </Marker>
+        )}
+      </MapContainer>
+    </div>
+
+    <div className="form-section">
       <h2>Search for Your Ride</h2>
-      <div className="map-container">
-        <MapContainer center={mapCenter} zoom={13} style={{ width: '100%', height: 400 }}>
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          />
-          <MapClickHandler />
-          {userLocation && (
-            <Marker position={userLocation}>
-              <Popup>Your Location</Popup>
-            </Marker>
-          )}
-          {pickupCoords && (
-            <Marker position={pickupCoords}>
-              <Popup>Pickup Location: {pickup}</Popup>
-            </Marker>
-          )}
-          {dropoffCoords && (
-            <Marker position={dropoffCoords}>
-              <Popup>Drop-off Location: {dropoff}</Popup>
-            </Marker>
-          )}
-        </MapContainer>
-      </div>
       <div className="input-group">
         <label htmlFor="pickup">Pickup Location:</label>
         <input
@@ -309,8 +311,8 @@ const UserDashboard = () => {
       </div>
       <button onClick={handleSearchRide}>Search Ride</button>
     </div>
-  );
+  </div>
+);
 };
-
 export default UserDashboard;
 
