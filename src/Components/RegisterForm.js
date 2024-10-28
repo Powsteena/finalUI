@@ -57,6 +57,9 @@ function RegisterForm() {
       const response = await axios.post('http://localhost:5000/api/auth/register', formData);
       console.log('Registration Successful:', response.data);
 
+      // Store user details in localStorage
+      localStorage.setItem('username', formData.username);
+      localStorage.setItem('email', formData.email);
       // Set success message and clear the form
       setSuccessMessage('Registration successful! Redirecting to your dashboard...');
       setFormData({
@@ -81,59 +84,6 @@ function RegisterForm() {
     }
   };
 
-//   return (
-    
-//     <div className="container d-flex justify-content-center align-items-center min-vh-100">
-//       <div className="form-container bg-white p-5 rounded shadow">
-//         <h2 className="text-center mb-4 text-dark-red">Join Us Today!</h2>
-//         {serverError && <p className="text-danger text-center">{serverError}</p>}
-//         {successMessage && <p className="text-success text-center">{successMessage}</p>}
-//         <form onSubmit={handleSubmit}>
-//           <div className="form-group">
-//             <input
-//               type="text"
-//               name="username"
-//               className="form-control"
-//               placeholder="Username"
-//               value={formData.username}
-//               onChange={handleChange}
-//               required
-//             />
-//             {errors.username && <p className="text-danger">{errors.username}</p>}
-//           </div>
-//           <div className="form-group">
-//             <input
-//               type="email"
-//               name="email"
-//               className="form-control"
-//               placeholder="Email"
-//               value={formData.email}
-//               onChange={handleChange}
-//               required
-//             />
-//             {errors.email && <p className="text-danger">{errors.email}</p>}
-//           </div>
-//           <div className="form-group">
-//             <input
-//               type="password"
-//               name="password"
-//               className="form-control"
-//               placeholder="Password"
-//               value={formData.password}
-//               onChange={handleChange}
-//               required
-//             />
-//             {errors.password && <p className="text-danger">{errors.password}</p>}
-//           </div>
-//           <button type="submit" className="btn w-100 mt-3">Register</button>
-//           <p className="text-center mt-3">
-//             <Link to="/login" className="text-orange">Already have an account? Login</Link>
-//           </p>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// }
 
 return (
   <div

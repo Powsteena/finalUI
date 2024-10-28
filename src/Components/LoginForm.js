@@ -77,6 +77,10 @@ function LoginForm() {
       // Store the role
       localStorage.setItem('role', role);
 
+
+      // Store user details in localStorage
+      localStorage.setItem('email', formData.email);
+
       setSuccessMessage('Login successful!');
       setFormData({ email: '', password: '' });
       setErrors({});
