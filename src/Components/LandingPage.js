@@ -1,95 +1,3 @@
-// import React from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import '../CSS/Landing.css';
-// import logo from '../Images/logo.png'
-// import heroimg from '../Images/hero.png'
-// import driver from '../Images/driver.jpg'
-// import Contact from './Contact';
-// import About from './About';
-
-// const LandingPage = () => {
-//   const navigate = useNavigate();
-
-//   const handlePublishRide = () => {
-//     const isDriverRegistered = localStorage.getItem('userRole') === 'driver';
-//     navigate(isDriverRegistered ? '/go-ride' : '/driver-register');
-//   };
-
-//   const handleGetStartedClick = () => {
-//     navigate('/register');
-//   };
-
-//   return (
-//     <div className="landing-page">
-//     <nav className="navbar">
-//   <div className="container">
-//     <a className="navbar-brand" href="/">
-//       <img src={logo} alt="Logo" className="logo" />
-//     </a>
-//     <ul className="nav-links">
-//       <li><a href="#about">About</a></li>
-//       <li><a href="#services">Services</a></li>
-//       <li><a href="#contact">Contact</a></li>
-//       <li><a href="/login" className="btn btn-primary btn-small">Login</a></li>
-//     </ul>
-//   </div>
-// </nav>
-
-//       <header className="hero">
-//         <div className="container">
-//           <div className="hero-content">
-//             <h1>"Your Next Ride is Just a Tap Away – Let’s Get Going!"</h1>
-//             <p>Find a ride or publish one. It's easy and quick! Join us and make your commute hassle-free.</p>
-//             <button className="btn" onClick={handleGetStartedClick}>
-//             Get Started
-//           </button>
-//     </div>
-//           <div className="hero-image">
-//             <img src={heroimg} alt="hero" />
-//           </div>
-//         </div>
-//       </header>
-
-
-// <section className="features" style={{ backgroundColor: ' rgba(192, 120, 120, 0.4)' }}>
-//   <div className="container">
-//     <div className="feature-card driver">
-//       <div className="feature-image">
-//         <img src={driver} alt="Driver" />
-//       </div>
-//       <div className="feature-text">
-//         <h2>For Drivers</h2>
-//         <p>Become a driver and start earning money by sharing rides. It's simple and rewarding!</p>
-//         <button onClick={handlePublishRide} className="btn">Publish Ride</button>
-//       </div>
-//     </div>
-//   </div>
-// </section>
-
-// <section id="contact" className="contact-section">
-//         <div className="container">
-//           <h2>Contact Us</h2>
-//           <p>If you have any questions or need assistance, feel free to reach out to us.</p>
-//           <Contact /> 
-//         </div>
-//       </section>
-
-//       <section id="about">
-//         <About />
-//       </section>
-
-//       <footer>
-//         <div className="container">
-//           <p>&copy; 2024 wayX. All rights reserved.</p>
-//           <a href="#contact">Contact Us</a>
-//         </div>
-//       </footer>
-//     </div>
-//   );
-// };
-
-
-// export default LandingPage;
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -114,19 +22,19 @@ const LandingPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-    <nav className="bg-[#530C0C] fixed w-full shadow-lg z-10">
+    <nav className="bg-[#3B3B3B] fixed w-full shadow-lg z-10">
       <div className="container mx-auto flex justify-between items-center p-4">
         <a href="/">
           <img src={logo} alt="Logo" className="h-10" />
         </a>
         <ul className="flex space-x-6 text-white">
-          <li><a href="#about" className="hover:text-orange-400 transition">About</a></li>
-          <li><a href="#services" className="hover:text-orange-400 transition">Services</a></li>
-          <li><a href="#contact" className="hover:text-orange-400 transition">Contact</a></li>
-          <li><a href="/login" className="bg-orange-500 py-2 px-4 rounded hover:bg-orange-600 transition">Login</a></li>
+          <li><a href="#about" className="hover:text-[#110D00] transition">About</a></li>
+          <li><a href="#services" className="hover:text-[#110D00] transition">Services</a></li>
+          <li><a href="#contact" className="hover:text-[#110D00] transition">Contact</a></li>
+          <li><a href="/login" className="bg-[#110D00] py-2 px-4 rounded hover:bg-[#000000] transition">Login</a></li>
         </ul>
       </div>
-    </nav>
+    </nav> 
 
     <header className="flex flex-col lg:flex-row items-center justify-center bg-white p-8 pt-20">
         <div className="max-w-md text-center lg:text-left">
