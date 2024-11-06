@@ -1,33 +1,40 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { LogOut } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-const Navbar = () => {
+const InnerNavbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Clear user data and navigate to login page
-    localStorage.removeItem('token');
-    navigate('/login');
+    // Add your logout logic here
+    navigate('/');
   };
 
   return (
-    <nav className="bg-[#530C0C] p-4 shadow-md">
-      <div className="container mx-auto flex justify-between items-center">
-        {/* Logo */}
-        <Link to="/" className="text-white text-2xl font-bold">
-          <img src="/logo.png" alt="Logo" className="h-10 w-auto" />
-        </Link>
+    <nav className="bg-white backdrop-blur-sm fixed w-full shadow-lg z-50">
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center h-20">
+          {/* Logo - matches your landing page navbar styling */}
+          <a href="/" className="flex items-center">
+            <img 
+              src="/api/placeholder/120/40" 
+              alt="Logo" 
+              className="h-12"
+            />
+          </a>
 
-        {/* Logout Button */}
-        <button
-          onClick={handleLogout}
-          className="text-white bg-[#FA7E0A] hover:bg-[#8F0E0E] font-semibold py-2 px-4 rounded-md"
-        >
-          Logout
-        </button>
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            className="bg-yellow-500 text-white px-6 py-3 rounded-full flex items-center space-x-2 hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 font-medium"
+          >
+            <LogOut size={20} />
+            <span>Logout</span>
+          </button>
+        </div>
       </div>
     </nav>
   );
 };
 
-export default Navbar;
+export default InnerNavbar;

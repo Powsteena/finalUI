@@ -351,7 +351,7 @@ function DriverLoginForm() {
 
       // Decode the token
       const decodedToken = jwtDecode(token);
-      const { role, id: driverId } = decodedToken.driver || {}; // Adjust if structure differs
+      const { role, id: driverId, hasPaid } = decodedToken.driver || {}; // Adjust if structure differs
 
       if (!role || !driverId) {
         throw new Error('Role or driver ID not found in token');
@@ -361,6 +361,12 @@ function DriverLoginForm() {
       localStorage.setItem('role', role);
       localStorage.setItem('driverId', driverId);
 
+     // Check if the driver has paid
+     if (!hasPaid) {
+      setServerError('You need to complete the first month payment');
+      // Navigate to the payment page
+      navigate(`/payment/${driverId}/${token}`);
+    } else {
       // Set success message and clear the form
       setSuccessMessage('Login successful!');
       setFormData({ email: '', password: '' });
@@ -368,7 +374,8 @@ function DriverLoginForm() {
       setServerError('');
 
       // Navigate to the Driver Dashboard after successful login
-      navigate(`/driver-dashboard/${token}`);
+      navigate(`/driver-dashboard/${driverId}`);
+    }
     } catch (error) {
       console.error('Login Error:', error);
 

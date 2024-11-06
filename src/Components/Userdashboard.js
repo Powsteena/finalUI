@@ -660,6 +660,9 @@ import L from 'leaflet';
 import { jwtDecode } from 'jwt-decode';
 import RideConfirmationDialog from '../Components/rideConfirmationDialog';
 import Loader from './Loader/Loader';
+import { MapPin, Navigation, Users, Car, Bike, CarFront, Calendar } from "lucide-react";
+import { format } from 'date-fns';
+
 
 // Fix for default marker icon issue with Leaflet and Webpack
 delete L.Icon.Default.prototype._getIconUrl;
@@ -683,6 +686,11 @@ const UserDashboard = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [loading, setLoading] = useState(false); // Initialize loading state
   const [accepted, setAccepted] = useState(false);
+
+  const [scheduledRides, setScheduledRides] = useState([]);
+  const [showScheduleForm, setShowScheduleForm] = useState(false);
+  const [scheduleDateTime, setScheduleDateTime] = useState('');
+  const [isScheduling, setIsScheduling] = useState(false);
 
   const fetchRideRequests = async () => {
     try {
@@ -870,83 +878,460 @@ const UserDashboard = () => {
     setShowConfirmation(false); // Close confirmation dialog
   };
 
-  return (
-    <div>
-      <MapContainer center={mapCenter} zoom={13} style={{ height: '80vh', width: '100%' }}>
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
-        <MapClickHandler />
-        {pickupCoords && <Marker position={pickupCoords}><Popup>Pickup: {pickup}</Popup></Marker>}
-        {dropoffCoords && <Marker position={dropoffCoords}><Popup>Dropoff: {dropoff}</Popup></Marker>}
-      </MapContainer>
-      <div className="flex flex-col p-4">
-        <input
-          type="text"
-          placeholder="Pickup Location"
-          value={pickup}
-          onChange={(e) => handleInputChange(e, setPickup, 'pickup')}
-          className="border border-gray-300 rounded p-2 mb-2"
-        />
-        {activeInput === 'pickup' && suggestions.map((place) => (
-          <div key={place.place_id} onClick={() => handleSuggestionSelect(place, setPickup, setPickupCoords)}>
-            {place.formatted_address}
+//   return (
+//     <div>
+//       <MapContainer center={mapCenter} zoom={13} style={{ height: '80vh', width: '100%' }}>
+//         <TileLayer
+//           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+//           attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+//         />
+//         <MapClickHandler />
+//         {pickupCoords && <Marker position={pickupCoords}><Popup>Pickup: {pickup}</Popup></Marker>}
+//         {dropoffCoords && <Marker position={dropoffCoords}><Popup>Dropoff: {dropoff}</Popup></Marker>}
+//       </MapContainer>
+//       <div className="flex flex-col p-4">
+//         <input
+//           type="text"
+//           placeholder="Pickup Location"
+//           value={pickup}
+//           onChange={(e) => handleInputChange(e, setPickup, 'pickup')}
+//           className="border border-gray-300 rounded p-2 mb-2"
+//         />
+//         {activeInput === 'pickup' && suggestions.map((place) => (
+//           <div key={place.place_id} onClick={() => handleSuggestionSelect(place, setPickup, setPickupCoords)}>
+//             {place.formatted_address}
+//           </div>
+//         ))}
+//         <input
+//           type="text"
+//           placeholder="Dropoff Location"
+//           value={dropoff}
+//           onChange={(e) => handleInputChange(e, setDropoff, 'dropoff')}
+//           className="border border-gray-300 rounded p-2 mb-2"
+//         />
+//         {activeInput === 'dropoff' && suggestions.map((place) => (
+//           <div key={place.place_id} onClick={() => handleSuggestionSelect(place, setDropoff, setDropoffCoords)}>
+//             {place.formatted_address}
+//           </div>
+//         ))}
+//         <select
+//           value={vehicleType}
+//           onChange={(e) => setVehicleType(e.target.value)}
+//           className="border border-gray-300 rounded p-2 mb-2"
+//         >
+//           <option value="Car">Car</option>
+//           <option value="Van">Van</option>
+//           <option value="Bike">Bike</option>
+//         </select>
+//         <input
+//           type="number"
+//           placeholder="Number of Passengers"
+//           value={numPassengers}
+//           onChange={(e) => setNumPassengers(e.target.value)}
+//           className="border border-gray-300 rounded p-2 mb-2"
+//         />
+//         <button
+//           onClick={handleSearchRide}
+//           className="bg-blue-500 text-white p-2 rounded"
+//         >
+//           Request Ride
+//         </button>
+//       </div>
+//       {showConfirmation && (
+//         <RideConfirmationDialog
+//           onConfirm={handleConfirmRide}
+//           onCancel={handleCancelRide}
+//           pickup={pickup}
+//           dropoff={dropoff}
+//           vehicleType={vehicleType}
+//           numPassengers={numPassengers}
+//         />
+//       )}
+//       {loading && !accepted && <Loader />}
+//       {accepted && (
+//         <div className="flex justify-center mt-4">
+//           <p className="bg-green-200 text-green-700 p-2 rounded">Ride Accepted</p>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default UserDashboard;
+
+
+
+return (
+  <div className="min-h-screen bg-gray-100">
+    <div className="container mx-auto p-4">
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* Left Column - Form */}
+        <div className="lg:col-span-1 bg-white shadow-xl rounded-xl p-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">Book Your Ride</h2>
+          
+          <div className="space-y-4">
+            {/* Instructions for map selection */}
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-800 mb-4">
+              <p>📍 Click on the map to set pickup and dropoff locations</p>
+            </div>
+
+            {/* Pickup Location */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Pickup Location
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Enter or click on map"
+                  value={pickup}
+                  onChange={(e) => handleInputChange(e, setPickup, 'pickup')}
+                  onFocus={() => setActiveInput('pickup')}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none"
+                />
+                {pickupCoords && (
+                  <span className="absolute right-2 top-2 text-green-500">
+                    ✓
+                  </span>
+                )}
+              </div>
+              {activeInput === 'pickup' && suggestions.length > 0 && (
+                <div className="mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto absolute z-10 w-full">
+                  {suggestions.map((place) => (
+                    <div
+                      key={place.place_id}
+                      onClick={() => handleSuggestionSelect(place, setPickup, setPickupCoords)}
+                      className="px-4 py-2 hover:bg-yellow-50 cursor-pointer text-sm"
+                    >
+                      {place.formatted_address}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Dropoff Location */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Dropoff Location
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Enter or click on map"
+                  value={dropoff}
+                  onChange={(e) => handleInputChange(e, setDropoff, 'dropoff')}
+                  onFocus={() => setActiveInput('dropoff')}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none"
+                />
+                {dropoffCoords && (
+                  <span className="absolute right-2 top-2 text-green-500">
+                    ✓
+                  </span>
+                )}
+              </div>
+              {activeInput === 'dropoff' && suggestions.length > 0 && (
+                <div className="mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto absolute z-10 w-full">
+                  {suggestions.map((place) => (
+                    <div
+                      key={place.place_id}
+                      onClick={() => handleSuggestionSelect(place, setDropoff, setDropoffCoords)}
+                      className="px-4 py-2 hover:bg-yellow-50 cursor-pointer text-sm"
+                    >
+                      {place.formatted_address}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Vehicle Type */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Vehicle Type</label>
+              <select
+                value={vehicleType}
+                onChange={(e) => setVehicleType(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none bg-white"
+              >
+                <option value="Car">Car</option>
+                <option value="Van">Van</option>
+                <option value="Bike">Bike</option>
+              </select>
+            </div>
+
+            {/* Number of Passengers */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Number of Passengers</label>
+              <input
+                type="number"
+                placeholder="Enter number of passengers"
+                value={numPassengers}
+                onChange={(e) => setNumPassengers(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none"
+                min="1"
+              />
+            </div>
+
+            {/* Request Button */}
+            <button
+              onClick={handleSearchRide}
+              disabled={loading || !pickupCoords || !dropoffCoords}
+              className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-3 px-6 rounded-lg transition duration-200 ease-in-out flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? (
+                <>
+                  <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  <span>Finding your ride...</span>
+                </>
+              ) : (
+                'Request Ride'
+              )}
+            </button>
+
+            {/* Status Messages */}
+            {accepted && (
+              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+                🎉 Your ride has been confirmed!
+              </div>
+            )}
           </div>
-        ))}
-        <input
-          type="text"
-          placeholder="Dropoff Location"
-          value={dropoff}
-          onChange={(e) => handleInputChange(e, setDropoff, 'dropoff')}
-          className="border border-gray-300 rounded p-2 mb-2"
-        />
-        {activeInput === 'dropoff' && suggestions.map((place) => (
-          <div key={place.place_id} onClick={() => handleSuggestionSelect(place, setDropoff, setDropoffCoords)}>
-            {place.formatted_address}
-          </div>
-        ))}
-        <select
-          value={vehicleType}
-          onChange={(e) => setVehicleType(e.target.value)}
-          className="border border-gray-300 rounded p-2 mb-2"
-        >
-          <option value="Car">Car</option>
-          <option value="Van">Van</option>
-          <option value="Bike">Bike</option>
-        </select>
-        <input
-          type="number"
-          placeholder="Number of Passengers"
-          value={numPassengers}
-          onChange={(e) => setNumPassengers(e.target.value)}
-          className="border border-gray-300 rounded p-2 mb-2"
-        />
-        <button
-          onClick={handleSearchRide}
-          className="bg-blue-500 text-white p-2 rounded"
-        >
-          Request Ride
-        </button>
-      </div>
-      {showConfirmation && (
-        <RideConfirmationDialog
-          onConfirm={handleConfirmRide}
-          onCancel={handleCancelRide}
-          pickup={pickup}
-          dropoff={dropoff}
-          vehicleType={vehicleType}
-          numPassengers={numPassengers}
-        />
-      )}
-      {loading && !accepted && <Loader />}
-      {accepted && (
-        <div className="flex justify-center mt-4">
-          <p className="bg-green-200 text-green-700 p-2 rounded">Ride Accepted</p>
         </div>
-      )}
+
+        {/* Right Column - Map */}
+        <div className="lg:col-span-2 relative">
+          <div className="bg-white shadow-xl rounded-xl overflow-hidden h-[calc(100vh-2rem)]">
+            {/* Active Input Indicator */}
+            <div className="absolute top-4 right-4 z-10 bg-white px-4 py-2 rounded-lg shadow-md">
+              {activeInput ? (
+                <span className="text-sm font-medium">
+                  Selecting: {activeInput === 'pickup' ? 'Pickup' : 'Dropoff'} Location
+                </span>
+              ) : (
+                <span className="text-sm font-medium">
+                  Click input field to select location
+                </span>
+              )}
+            </div>
+
+            <MapContainer 
+              center={mapCenter} 
+              zoom={13} 
+              className="h-full w-full rounded-xl"
+            >
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+              />
+              <MapClickHandler onMapClick={MapClickHandler} />
+              {pickupCoords && (
+                <Marker position={pickupCoords}>
+                  <Popup>Pickup: {pickup}</Popup>
+                </Marker>
+              )}
+              {dropoffCoords && (
+                <Marker position={dropoffCoords}>
+                  <Popup>Dropoff: {dropoff}</Popup>
+                </Marker>
+              )}
+            </MapContainer>
+          </div>
+        </div>
+      </div>
     </div>
-  );
+
+    {/* Confirmation Dialog with higher z-index */}
+    {showConfirmation && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[9999]">
+        <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
+          <h3 className="text-xl font-bold text-gray-800 mb-4">Confirm Your Ride</h3>
+          <div className="space-y-3 text-gray-600">
+            <p><span className="font-medium">From:</span> {pickup}</p>
+            <p><span className="font-medium">To:</span> {dropoff}</p>
+            <p><span className="font-medium">Vehicle:</span> {vehicleType}</p>
+            <p><span className="font-medium">Passengers:</span> {numPassengers}</p>
+          </div>
+          <div className="mt-6 flex space-x-3">
+            <button
+              onClick={handleConfirmRide}
+              className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 px-4 rounded-lg transition duration-200"
+            >
+              Confirm
+            </button>
+            <button
+              onClick={handleCancelRide}
+              className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg transition duration-200"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+);
 };
 
 export default UserDashboard;
+
+// return (
+//   <div className="flex h-screen bg-gray-900">
+//     {/* Form Section - One Third */}
+//     <div className="w-1/3 h-screen overflow-y-auto bg-black border-r border-gray-800">
+//       <div className="p-6 space-y-6">
+//         <h2 className="text-2xl font-semibold text-yellow-500">Request a Ride</h2>
+        
+//         {/* Location Inputs */}
+//         <div className="space-y-4">
+//           <div className="relative">
+//             <div className="absolute left-3 top-3 text-yellow-500">
+//               <MapPin size={20} />
+//             </div>
+//             <input
+//               type="text"
+//               placeholder="Pickup Location"
+//               value={pickup}
+//               onChange={(e) => handleInputChange(e, setPickup, 'pickup')}
+//               className="w-full pl-10 h-12 bg-gray-500 border border-gray-800 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition-all text-white placeholder-gray-500"
+//             />
+//             {activeInput === 'pickup' && suggestions.length > 0 && (
+//               <div className="absolute z-10 w-full mt-1 bg-gray-500 rounded-md shadow-lg border border-gray-800">
+//                 {suggestions.map((place) => (
+//                   <div
+//                     key={place.place_id}
+//                     onClick={() => handleSuggestionSelect(place, setPickup, setPickupCoords)}
+//                     className="px-4 py-2 hover:bg-gray-500 cursor-pointer text-gray-300"
+//                   >
+//                     {place.formatted_address}
+//                   </div>
+//                 ))}
+//               </div>
+//             )}
+//           </div>
+
+//           <div className="relative">
+//             <div className="absolute left-3 top-3 text-yellow-500">
+//               <Navigation size={20} />
+//             </div>
+//             <input
+//               type="text"
+//               placeholder="Dropoff Location"
+//               value={dropoff}
+//               onChange={(e) => handleInputChange(e, setDropoff, 'dropoff')}
+//               className="w-full pl-10 h-12 bg-gray-500 border border-gray-800 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition-all text-white placeholder-gray-500"
+//             />
+//             {activeInput === 'dropoff' && suggestions.length > 0 && (
+//               <div className="absolute z-10 w-full mt-1 bg-gray-500 rounded-md shadow-lg border border-gray-800">
+//                 {suggestions.map((place) => (
+//                   <div
+//                     key={place.place_id}
+//                     onClick={() => handleSuggestionSelect(place, setDropoff, setDropoffCoords)}
+//                     className="px-4 py-2 hover:bg-gray-200 cursor-pointer text-gray-300"
+//                   >
+//                     {place.formatted_address}
+//                   </div>
+//                 ))}
+//               </div>
+//             )}
+//           </div>
+
+//           {/* Vehicle Selection */}
+//           <div>
+//             <label className="block text-sm font-medium text-yellow-500 mb-2">Select Vehicle Type</label>
+//             <div className="grid grid-cols-3 gap-3">
+//               {['Car', 'Van', 'Bike'].map((type) => (
+//                 <button
+//                   key={type}
+//                   onClick={() => setVehicleType(type)}
+//                   className={`p-3 rounded-lg border ${
+//                     vehicleType === type 
+//                       ? 'border-yellow-500 bg-yellow-500 bg-opacity-20 text-yellow-500' 
+//                       : 'border-gray-400 hover:border-yellow-500 hover:bg-gray-800 text-gray-300'
+//                   } transition-all flex flex-col items-center gap-2`}
+//                 >
+//                   {type === 'Car' && <Car size={20} />}
+//                   {type === 'Van' && <CarFront size={20} />}
+//                   {type === 'Bike' && <Bike size={20} />}
+//                   <span className="text-sm">{type}</span>
+//                 </button>
+//               ))}
+//             </div>
+//           </div>
+
+//           {/* Passengers Input */}
+//           <div>
+//             <label className="block text-sm font-medium text-yellow-500 mb-2">Number of Passengers</label>
+//             <div className="relative">
+//               <div className="absolute left-3 top-3 text-yellow-500">
+//                 <Users size={20} />
+//               </div>
+//               <input
+//                 type="number"
+//                 placeholder="Enter number of passengers"
+//                 value={numPassengers}
+//                 onChange={(e) => setNumPassengers(e.target.value)}
+//                 className="w-full pl-10 h-12 bg-gray-900 border border-gray-800 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition-all text-white placeholder-gray-500"
+//                 min="1"
+//                 max="8"
+//               />
+//             </div>
+//           </div>
+
+//           {/* Estimated Price */}
+//           <div className="bg-gray-900 border border-gray-800 p-4 rounded-lg">
+//             <div className="flex justify-between items-center">
+//               <span className="text-gray-400">Estimated Price</span>
+//               <span className="text-lg font-semibold text-yellow-500">$25-30</span>
+//             </div>
+//           </div>
+
+//            {/* Request Button */}
+//            <button
+//             onClick={handleSearchRide}
+//             className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-medium py-3 rounded-lg transition-colors"
+//           >
+//             Request Ride
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+
+//     {/* Map Section - Two Thirds */}
+//     <div className="w-2/3 h-screen">
+//       <MapContainer center={mapCenter} zoom={13} className="h-full w-full">
+//         <TileLayer
+//           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+//           attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+//         />
+//         <MapClickHandler />
+//         {pickupCoords && <Marker position={pickupCoords}><Popup>Pickup: {pickup}</Popup></Marker>}
+//         {dropoffCoords && <Marker position={dropoffCoords}><Popup>Dropoff: {dropoff}</Popup></Marker>}
+//       </MapContainer>
+//     </div>
+
+//     {/* Loading Overlay */}
+//     {loading && !accepted && (
+//       <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+//         <div className="bg-gray-900 p-6 rounded-lg border border-gray-800">
+//           <div className="animate-spin rounded-full h-12 w-12 border-4 border-yellow-500 border-t-transparent mx-auto"></div>
+//           <p className="mt-4 text-gray-300">Finding your ride...</p>
+//         </div>
+//       </div>
+//     )}
+
+//     {/* Success Message */}
+//     {accepted && (
+//       <div className="fixed bottom-8 right-8 z-50">
+//         <div className="bg-gray-900 border border-yellow-500 text-yellow-500 px-6 py-3 rounded-lg shadow-lg flex items-center gap-2">
+//           <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
+//           Ride Accepted
+//         </div>
+//       </div>
+//     )}
+//   </div>
+// );
+// };
+
+// export default UserDashboard;

@@ -130,7 +130,7 @@ const LandingPage = () => {
                 ))}
                 <a
                   href="/login"
-                  className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white mx-4 mt-4 px-6 py-3 rounded-full flex items-center space-x-2 justify-center hover:from-yellow-600 hover:to-orange-600 transition-all duration-300"
+                  className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white mx-4 mt-4 px-2 py-1 rounded-full flex items-center space-x-2 justify-center hover:from-yellow-600 hover:to-orange-600 transition-all duration-300"
                 >
                   <LogIn size={20} />
                   <span>Login</span>
@@ -166,7 +166,7 @@ const LandingPage = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={handleGetStartedClick}
-                className="bg-yellow-500 text-white px-8 py-4 rounded-full hover:bg-black transition-colors duration-200 font-medium text-lg"
+                className="bg-yellow-500 text-white px-3 py-1 rounded-full hover:bg-black transition-colors duration-200 font-medium text-lg"
               >
                 Book a Ride
               </button>
@@ -226,7 +226,7 @@ const LandingPage = () => {
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-black mb-4">Our Services</h2>
             <div className="w-24 h-1 bg-gradient-to-r from-yellow-500 to-orange-500 mx-auto rounded-full mb-6"></div>
-            <p className="text-gray-800 max-w-2xl mx-auto">
+            <p className="text-black/80 max-w-2xl mx-auto">
               Choose from our wide range of transportation services designed to meet your specific needs
             </p>
           </div>

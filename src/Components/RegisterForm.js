@@ -228,7 +228,7 @@ const RegisterForm = () => {
       setFormData({ username: '', email: '', password: '' });
       setErrors({});
       setServerError('');
-      navigate('/user-dashboard');
+      navigate('/user-panel');
     } catch (error) {
       if (error.response && error.response.data) {
         setServerError(error.response.data.message || 'Registration failed. Please try again.');
