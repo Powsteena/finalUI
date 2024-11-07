@@ -1,119 +1,127 @@
-import React from 'react';
-import { Clock } from 'lucide-react';
-import { jwtDecode } from 'jwt-decode';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Calendar, Clock, MapPin, Car, User, X } from 'lucide-react';
 
-const RidesHistory = () => {
-  const [pastRides, setPastRides] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState('');
+const CreatedRides = () => {
+  const [createdRides, setCreatedRides] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  React.useEffect(() => {
-    fetchPastRides();
+  useEffect(() => {
+    const fetchCreatedRides = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const { data } = await axios.get('http://localhost:5000/api/auth/my-rides', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setCreatedRides(data);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch rides');
+        setLoading(false);
+      }
+    };
+
+    fetchCreatedRides();
   }, []);
 
-  const fetchPastRides = async () => {
-    try {
-      setLoading(true);
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setError('User not authenticated');
-        return;
-      }
-  
-      const decoded = jwtDecode(token);
-      const userId = decoded.user?.id;
-  
-      if (!userId) {
-        setError('Failed to identify user. Please login again.');
-        return;
-      }
-  
-      const response = await axios.get(`http://localhost:5000/api/auth/user/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-  
-      if (response.data) {
-        setPastRides(response.data);
-      } else {
-        setError('No rides found for the user');
-      }
-    } catch (err) {
-      console.error('Error fetching rides:', err);
-      setError('Failed to fetch ride history');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getRideStatusColor = (status) => {
-    const statusColors = {
-      pending: 'bg-yellow-100 text-yellow-800',
-      accepted: 'bg-green-100 text-green-800',
-      completed: 'bg-blue-100 text-blue-800',
-      cancelled: 'bg-red-100 text-red-800'
-    };
-    return statusColors[status.toLowerCase()] || 'bg-gray-100 text-gray-800';
-  };
-
   if (loading) {
-    return <div className="text-center py-4">Loading ride history...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-[200px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-500"></div>
+      </div>
+    );
   }
 
   if (error) {
     return (
-      <div className="p-4 bg-red-100 text-red-800 rounded-lg">
+      <div className="text-red-500 p-4 text-center bg-red-50 rounded-lg">
         {error}
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      {pastRides.length === 0 ? (
-        <div className="text-center py-8">
-          <Clock className="mx-auto h-12 w-12 text-gray-400" />
-          <p className="mt-2 text-gray-500">No ride history available</p>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-gray-800">My Future Rides</h2>
+        {/* <button className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-full flex items-center space-x-2 transition-colors">
+          <span>+</span>
+          <span>Schedule Ride</span>
+        </button> */}
+      </div>
+
+      {createdRides.length === 0 ? (
+        <div className="text-center py-8 text-gray-500">
+          No rides scheduled yet.
         </div>
       ) : (
-        pastRides.map((ride) => (
-          <div
-            key={ride._id}
-            className="border rounded-lg p-4 hover:shadow-md transition-shadow"
-          >
-            <div className="flex justify-between items-start">
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className={`px-2 py-1 rounded-full text-sm ${getRideStatusColor(ride.status)}`}>
-                    {ride.status}
-                  </span>
-                  <span className="text-sm text-gray-500">
-                    {new Date(ride.scheduledDateTime).toLocaleString()}
-                  </span>
+        <div className="space-y-4">
+          {createdRides.map((ride) => (
+            <div 
+              key={ride._id} 
+              className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 relative"
+            >
+              <button className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <X size={20} />
+              </button>
+
+              <div className="space-y-4">
+                {/* Date and Time */}
+                <div className="flex space-x-6">
+                  <div className="flex items-center text-gray-600 space-x-2">
+                    <Calendar size={18} className="text-yellow-500" />
+                    <span>{new Date(ride.scheduledDateTime).toLocaleDateString()}</span>
+                  </div>
+                  <div className="flex items-center text-gray-600 space-x-2">
+                    <Clock size={18} className="text-yellow-500" />
+                    <span>{new Date(ride.scheduledDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                  </div>
                 </div>
-                <p className="text-sm">
-                  <strong>From:</strong> {ride.pickup.address}
-                </p>
-                <p className="text-sm">
-                  <strong>To:</strong> {ride.dropoff.address}
-                </p>
-                <p className="text-sm">
-                  <strong>Vehicle:</strong> {ride.vehicleType} |{' '}
-                  <strong>Passengers:</strong> {ride.numPassengers}
-                </p>
+
+                {/* Pickup Location */}
+                <div className="flex items-start space-x-2">
+                  <MapPin size={18} className="text-green-500 mt-1 flex-shrink-0" />
+                  <div>
+                    <div className="text-sm text-gray-500">Pickup</div>
+                    <div className="text-gray-700">{ride.pickup.address || 'Not provided'}</div>
+                  </div>
+                </div>
+
+                {/* Dropoff Location */}
+                <div className="flex items-start space-x-2">
+                  <MapPin size={18} className="text-red-500 mt-1 flex-shrink-0" />
+                  <div>
+                    <div className="text-sm text-gray-500">Dropoff</div>
+                    <div className="text-gray-700">{ride.dropoff.address || 'Not provided'}</div>
+                  </div>
+                </div>
+
+                {/* Vehicle and Passengers Info */}
+                <div className="flex justify-between pt-4 border-t border-gray-100">
+                  <div className="flex items-center space-x-2 text-gray-600">
+                    <Car size={18} />
+                    <span className="capitalize">{ride.vehicleType}</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-gray-600">
+                    <User size={18} />
+                    <span>{ride.numPassengers || 2}</span>
+                  </div>
+                </div>
+
+                {ride.driverId && (
+                  <div className="flex items-center space-x-2 pt-4 border-t border-gray-100 text-gray-600">
+                    <User size={18} className="text-yellow-500" />
+                    <span>Driver: {ride.driverId.name} ({ride.driverId.vehicle})</span>
+                  </div>
+                )}
               </div>
-              {ride.driverId && (
-                <div className="text-right text-sm">
-                  <p className="font-medium">Driver: {ride.driverId.name}</p>
-                  <p className="text-gray-500">Vehicle: {ride.driverId.vehicle}</p>
-                </div>
-              )}
             </div>
-          </div>
-        ))
+          ))}
+        </div>
       )}
     </div>
   );
 };
 
-export default RidesHistory;
+export default CreatedRides;

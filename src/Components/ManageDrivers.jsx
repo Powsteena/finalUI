@@ -1,112 +1,3 @@
-// import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
-
-// function ManageDrivers() {
-//   const [drivers, setDrivers] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-//   const [successMessage, setSuccessMessage] = useState('');
-
-//   useEffect(() => {
-//     fetchDrivers();
-//   }, []);
-
-//   const fetchDrivers = async () => {
-//     try {
-//       const token = localStorage.getItem('token');
-//       if (!token) {
-//         throw new Error('No token found, please log in.');
-//       }
-
-//       const response = await axios.get('http://localhost:5000/api/admin/driver', {
-//         headers: { Authorization: `Bearer ${token}` }
-//       });
-//       setDrivers(response.data);
-//     } catch (err) {
-//       console.error('Error fetching drivers:', err);
-//       setError(err.response?.data?.msg || err.message || 'Error fetching drivers');
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const handleAction = async (action, driverId) => {
-//     try {
-//       setError(null);
-//       setSuccessMessage('');
-//       const token = localStorage.getItem('token');
-//       if (!token) {
-//         throw new Error('No token found, please log in.');
-//       }
-
-//       console.log(`Attempting ${action} for driver ${driverId}`);
-
-//       let response;
-//       if (action === 'delete') {
-//         response = await axios.delete(
-//           `http://localhost:5000/api/admin/driver/${driverId}`,
-//           { headers: { Authorization: `Bearer ${token}` } }
-//         );
-//       } else {
-//         response = await axios.patch(
-//           `http://localhost:5000/api/admin/driver/${driverId}/${action}`,
-//           {},
-//           { headers: { Authorization: `Bearer ${token}` } }
-//         );
-//       }
-
-//       console.log('Action response:', response.data);
-//       setSuccessMessage(response.data.msg);
-//       fetchDrivers(); // Refresh driver list
-//     } catch (err) {
-//       console.error(`Error performing ${action}:`, err);
-//       setError(err.response?.data?.msg || err.message || `Error performing ${action}`);
-//     }
-//   };
-
-//   if (loading) return <p>Loading...</p>;
-
-//   return (
-//     <div style={{padding: '1rem'}}>
-//       <h2 style={{fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem'}}>Manage Drivers</h2>
-//       {error && <p style={{color: 'red', marginBottom: '1rem'}}>{error}</p>}
-//       {successMessage && (
-//         <p style={{backgroundColor: '#d4edda', border: '1px solid #c3e6cb', color: '#155724', padding: '0.75rem', borderRadius: '0.25rem', marginBottom: '1rem'}}>
-//           {successMessage}
-//         </p>
-//       )}
-//       <ul style={{listStyleType: 'none', padding: 0}}>
-//         {drivers.length ? (
-//           drivers.map((driver) => (
-//             <li key={driver._id} style={{border: '1px solid #ccc', padding: '1rem', marginBottom: '1rem', borderRadius: '0.25rem'}}>
-//               <p style={{fontWeight: 'bold'}}>{driver.username} ({driver.email})</p>
-//               <p>Vehicle Type: {driver.vehicleType || 'N/A'}</p>
-//               <p>License Number: {driver.licenseNumber || 'N/A'}</p>
-//               <p>Documents: {Array.isArray(driver.documents) ? driver.documents.join(', ') : 'None'}</p>
-//               <p>Status: {driver.isApproved ? 'Approved' : 'Pending'}</p>
-//               <p>Created At: {new Date(driver.createdAt).toLocaleString()}</p>
-//               <div style={{marginTop: '0.5rem'}}>
-//                 <button onClick={() => handleAction(driver.isApproved ? 'reject' : 'approve', driver._id)} style={{marginRight: '0.5rem'}}>
-//                   {driver.isApproved ? 'Reject' : 'Approve'}
-//                 </button>
-//                 <button onClick={() => handleAction('delete', driver._id)} style={{backgroundColor: '#dc3545', color: 'white'}}>
-//                   Delete
-//                 </button>
-//               </div>
-//             </li>
-//           ))
-//         ) : (
-//           <p>No drivers found.</p>
-//         )}
-//       </ul>
-//     </div>
-//   );
-// }
-
-// export default ManageDrivers;
-
-
-
 import React, { useState, useEffect } from 'react';
 
 function ManageDrivers() {
@@ -293,24 +184,17 @@ function ManageDrivers() {
             font-weight: 500;
           }
 
-          .status-badge.approved {
-            background: #ecfdf5;
-            color: var(--success-color);
-          }
+          .status-badge.approved { background: #ecfdf5; color: var(--success-color); }
+          .status-badge.pending { background: #fffbeb; color: var(--warning-color); }
+          .status-badge.paid { background: #dbeafe; color: #2563eb; }
+          .status-badge.unpaid { background: #fee2e2; color: #dc2626; }
+          .status-badge.available { background: #d1fae5; color: #059669; }
+          .status-badge.unavailable { background: #fef2f2; color: #dc2626; }
 
-          .status-badge.pending {
-            background: #fffbeb;
-            color: var(--warning-color);
-          }
-
-          .document-tag {
-            display: inline-block;
-            padding: 4px 8px;
-            background: var(--background-color);
-            border-radius: 4px;
-            font-size: 12px;
-            margin: 2px;
-            color: var(--text-secondary);
+          .document-link {
+            color: var(--primary-color);
+            text-decoration: underline;
+            cursor: pointer;
           }
 
           .actions {
@@ -329,50 +213,16 @@ function ManageDrivers() {
             transition: all 0.2s;
           }
 
-          .btn-approve {
-            background: #ecfdf5;
-            color: var(--success-color);
-          }
+          .btn-approve { background: #ecfdf5; color: var(--success-color); }
+          .btn-approve:hover { background: #d1fae5; }
+          .btn-reject { background: #fffbeb; color: var(--warning-color); }
+          .btn-reject:hover { background: #fef3c7; }
+          .btn-delete { background: #fef2f2; color: var(--danger-color); }
+          .btn-delete:hover { background: #fee2e2; }
 
-          .btn-approve:hover {
-            background: #d1fae5;
-          }
-
-          .btn-reject {
-            background: #fffbeb;
-            color: var(--warning-color);
-          }
-
-          .btn-reject:hover {
-            background: #fef3c7;
-          }
-
-          .btn-delete {
-            background: #fef2f2;
-            color: var(--danger-color);
-          }
-
-          .btn-delete:hover {
-            background: #fee2e2;
-          }
-
-          .loader {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: var(--primary-color);
-            font-size: 18px;
-          }
-
-          @keyframes slideIn {
-            from {
-              transform: translateY(-20px);
-              opacity: 0;
-            }
-            to {
-              transform: translateY(0);
-              opacity: 1;
+          @media (max-width: 1024px) {
+            .hide-tablet {
+              display: none;
             }
           }
 
@@ -423,9 +273,10 @@ function ManageDrivers() {
             <thead>
               <tr>
                 <th>Driver Info</th>
-                <th className="hide-mobile">Vehicle Details</th>
-                <th className="hide-mobile">Documents</th>
+                <th>Vehicle Details</th>
+                <th className="hide-tablet">Documents</th>
                 <th>Status</th>
+                <th className="hide-mobile">Registration Date</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -437,29 +288,34 @@ function ManageDrivers() {
                       <div className="driver-info">
                         <span className="driver-name">{driver.username}</span>
                         <span className="driver-email">{driver.email}</span>
+                        <span className="driver-email">Phone: {driver.phoneNumber}</span>
                       </div>
-                    </td>
-                    <td className="hide-mobile">
-                      <div className="driver-info">
-                        <span>Type: {driver.vehicleType || 'N/A'}</span>
-                        <span>License: {driver.licenseNumber || 'N/A'}</span>
-                      </div>
-                    </td>
-                    <td className="hide-mobile">
-                      {Array.isArray(driver.documents) && driver.documents.length > 0 ? (
-                        <div>
-                          {driver.documents.map((doc, index) => (
-                            <span key={index} className="document-tag">{doc}</span>
-                          ))}
-                        </div>
-                      ) : (
-                        <span>No documents</span>
-                      )}
                     </td>
                     <td>
-                      <span className={`status-badge ${driver.isApproved ? 'approved' : 'pending'}`}>
-                        {driver.isApproved ? 'Approved' : 'Pending'}
-                      </span>
+                      <div className="driver-info">
+                        <span>Type: {driver.vehicleType}</span>
+                        <span>Number: {driver.vehicleNumber}</span>
+                      </div>
+                    </td>
+                    <td className="hide-tablet">
+                      <div className="driver-info">
+                        <a className="document-link">License Image</a>
+                        <a className="document-link">Vehicle Registration</a>
+                        <a className="document-link">Insurance Document</a>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="driver-info">
+                        <span className={`status-badge ${driver.isApproved ? 'approved' : 'pending'}`}>
+                          {driver.isApproved ? 'Approved' : 'Pending'}
+                        </span>
+                        <span className={`status-badge ${driver.hasPaid ? 'paid' : 'unpaid'}`}>
+                          {driver.hasPaid ? 'Paid' : 'Unpaid'}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="hide-mobile">
+                      {new Date(driver.createdAt).toLocaleDateString()}
                     </td>
                     <td>
                       <div className="actions">
@@ -481,7 +337,7 @@ function ManageDrivers() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>
+                  <td colSpan={6} style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>
                     No drivers found.
                   </td>
                 </tr>

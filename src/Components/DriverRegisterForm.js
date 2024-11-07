@@ -8,7 +8,7 @@ function DriverRegisterForm() {
     email: '',
     password: '',
     vehicleType: '',
-    licenseNumber: '',
+    phoneNumber: '',
     licenseImage: null,
     vehicleRegistration: null,
     insuranceDocument: null
@@ -42,8 +42,8 @@ function DriverRegisterForm() {
       newErrors.vehicleType = 'Vehicle type is required';
     }
 
-    if (!formData.licenseNumber.trim()) {
-      newErrors.licenseNumber = 'License number is required';
+    if (!formData.phoneNumber.trim()) {
+      newErrors.phoneNumber = 'License number is required';
     }
 
     if (!formData.licenseImage) {
@@ -90,7 +90,7 @@ function DriverRegisterForm() {
     formDataToSend.append('email', formData.email);
     formDataToSend.append('password', formData.password);
     formDataToSend.append('vehicleType', formData.vehicleType);
-    formDataToSend.append('licenseNumber', formData.licenseNumber);
+    formDataToSend.append('phoneNumber', formData.phoneNumber);
     formDataToSend.append('licenseImage', formData.licenseImage);
     formDataToSend.append('vehicleRegistration', formData.vehicleRegistration);
     formDataToSend.append('insuranceDocument', formData.insuranceDocument);
@@ -110,7 +110,7 @@ function DriverRegisterForm() {
         email: '',
         password: '',
         vehicleType: '',
-        licenseNumber: '',
+        phoneNumber: '',
         licenseImage: null,
         vehicleRegistration: null,
         insuranceDocument: null
@@ -236,15 +236,15 @@ function DriverRegisterForm() {
                 <div>
                   <input
                     type="text"
-                    name="licenseNumber"
-                    placeholder="License Number"
-                    value={formData.licenseNumber}
+                    name="phoneNumber"
+                    placeholder="phone Number"
+                    value={formData.phoneNumber}
                     onChange={handleChange}
                     className="w-full px-4 py-3 bg-black text-yellow-500 border-2 border-yellow-500 rounded-xl 
                                focus:outline-none focus:ring-2 focus:ring-yellow-500 
                                placeholder-yellow-700 transition duration-300"
                   />
-                  {errors.licenseNumber && <p className="text-red-400 text-sm mt-1">{errors.licenseNumber}</p>}
+                  {errors.phoneNumber && <p className="text-red-400 text-sm mt-1">{errors.phoneNumber}</p>}
                 </div>
               </div>
 
