@@ -13,7 +13,6 @@ import ManageUsers from './Components/ManageUsers';
 import ManageDrivers from './Components/ManageDrivers';
 import DriverDashboard from './Components/DriverDashboard';
 import CompletedRides from './Components/CompletedRides';
-import RideRequests from './Components/RideRequest';
 import ManageRides from './Components/ManageRides';
 import Paymentpage from './Components/Paymentpage'
 
@@ -29,7 +28,6 @@ function App() {
           <Route path="/login" element={<LoginForm />} />
           <Route path="/driver-register" element={<DriverRegisterForm />} />
           <Route path="/driver-login" element={<DriverLoginForm />} />
-          {/* <Route path="/user-dashboard" element={<UserDashboard />} /> */}
           <Route path="/user-panel" element={<UserPanel />} />
           <Route path="/admin" element={<AdminDashboard />} /> {/* Add AdminDashboard route */}
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
@@ -37,7 +35,6 @@ function App() {
           <Route path="/admin-drivers" element={<ManageDrivers />} />
           <Route path="/driver-dashboard/:token" element={<DriverDashboard />} />
           <Route path="/completed-rides" element={<CompletedRides />} />
-          <Route path="/ride-requests" element={<RideRequests />} />
           <Route path="/admin-rides" element={<ManageRides />} />
           <Route path="/payment/:driverId/:token" element={<Paymentpage />} />
         

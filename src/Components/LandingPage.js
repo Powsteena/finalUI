@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import logo from '../Images/log.png';
+import video from '../Images/bg.mp4'
 import { useNavigate } from 'react-router-dom';
 import {
   Home,
@@ -18,7 +19,10 @@ import {
   Users,
   PhoneCall,
   MapPinned,
-  Send
+  Send,
+  Twitter,
+  Facebook,
+  Instagram
 } from 'lucide-react';
 
 const LandingPage = () => {
@@ -100,7 +104,7 @@ const LandingPage = () => {
                 ))}
                 <a
                   href="/login"
-                  className="bg-yellow-500 text-white px-6 py-3 rounded-full flex items-center space-x-2 hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 transform hover:scale-105 font-medium"
+                  className="bg-yellow-500 text-white px-2 py-2 rounded-full flex items-center space-x-2 hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 transform hover:scale-105 font-medium"
                 >
                   <LogIn size={20} />
                   <span>Login</span>
@@ -150,7 +154,7 @@ const LandingPage = () => {
             muted
             className="w-full h-full object-cover"
           >
-            <source src="/path/to/your/video.mp4" type="video/mp4" />
+            <source src={video} type="video/mp4" />
           </video>
         </div>
 
@@ -166,7 +170,7 @@ const LandingPage = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={handleGetStartedClick}
-                className="bg-yellow-500 text-white px-3 py-1 rounded-full hover:bg-black transition-colors duration-200 font-medium text-lg"
+                className="bg-yellow-500 text-white px-6 py-1 rounded-full hover:bg-black transition-colors duration-200 font-medium text-lg"
               >
                 Book a Ride
               </button>
@@ -214,7 +218,7 @@ const LandingPage = () => {
       </section>
 
      {/* Services Section with diagonal design */}
-     <section id="services" className="py-20 relative overflow-hidden bg-black/50 from-orange-50 to-yellow-50">
+     <section id="services" className="py-20 relative overflow-hidden bg-black/70 from-orange-50 to-yellow-50">
         {/* Decorative background elements */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-white/50 to-transparent"></div>
@@ -285,7 +289,7 @@ const LandingPage = () => {
           <div className="grid lg:grid-cols-3 gap-12">
             {/* Contact Information Card */}
             <div className="lg:col-span-1">
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 border border-white hover:shadow-xl transition-all duration-300">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-10 border border-white hover:shadow-xl transition-all duration-300">
                 <h3 className="text-xl font-semibold text-gray-800 mb-6">Contact Information</h3>
                 
                 <div className="space-y-6">
@@ -396,16 +400,59 @@ const LandingPage = () => {
       </section>
 
       {/* Footer with gradient background */}
-      <footer className="bg-black/80 py-8">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-white">&copy; 2024 wayX. All rights reserved.</p>
-          <div className="mt-4">
-            <a href="#contact" className="text-yellow-400 hover:text-yellow-300 transition-colors duration-200">
-              Contact Us
+      <footer className="bg-black/90 text-white">
+    <div className="container mx-auto px-6 py-10">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <div className="flex items-center mb-4">
+            <Home className="h-6 w-6 text-gray-400 mr-2" />
+            <h3 className="text-xl font-semibold">wayX</h3>
+          </div>
+          <p className="text-gray-400">Making transportation accessible and efficient.</p>
+        </div>
+        <div>
+          <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
+          <ul className="space-y-3 text-gray-400">
+            <li>
+              <a href="#about" className="flex items-center hover:text-white">
+                <Mail className="h-5 w-5 mr-2" />
+                About Us
+              </a>
+            </li>
+            <li>
+              <a href="#contact" className="flex items-center hover:text-white">
+                <Phone className="h-5 w-5 mr-2" />
+                Contact
+              </a>
+            </li>
+            <li>
+              <a href="#" className="flex items-center hover:text-white">
+                <Home className="h-5 w-5 mr-2" />
+                Terms of Service
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3 className="text-xl font-semibold mb-4">Connect With Us</h3>
+          <div className="flex space-x-4">
+            <a href="#" className="text-gray-400 hover:text-white">
+              <Twitter className="h-6 w-6" />
+            </a>
+            <a href="#" className="text-gray-400 hover:text-white">
+              <Facebook className="h-6 w-6" />
+            </a>
+            <a href="#" className="text-gray-400 hover:text-white">
+              <Instagram className="h-6 w-6" />
             </a>
           </div>
         </div>
-      </footer>
+      </div>
+      <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+        © 2024 wayX. All rights reserved.
+      </div>
+    </div>
+  </footer>
     </div>
   );
 };
