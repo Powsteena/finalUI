@@ -1,6 +1,8 @@
 import React from 'react';
 import { LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import logo from '../Images/log.png';
+
 
 const InnerNavbar = () => {
   const navigate = useNavigate();
@@ -17,7 +19,7 @@ const InnerNavbar = () => {
           {/* Logo - matches your landing page navbar styling */}
           <a href="/" className="flex items-center">
             <img 
-              src="/api/placeholder/120/40" 
+              src={logo} 
               alt="Logo" 
               className="h-12"
             />

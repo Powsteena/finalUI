@@ -25,6 +25,7 @@ import {
   Instagram
 } from 'lucide-react';
 
+
 const LandingPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeService, setActiveService] = useState(null);

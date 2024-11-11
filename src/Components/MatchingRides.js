@@ -14,7 +14,6 @@ const MatchingRides = () => {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
-                // Log the response to debug
                 console.log('Fetched rides:', response.data);
 
                 setRides(response.data);
@@ -29,9 +28,8 @@ const MatchingRides = () => {
         fetchRides();
     }, []);
 
-    if (loading) return <div className="flex justify-center p-4">Loading...</div>;
+    if (loading) return <div className="flex justify-center p-4 text-yellow-500">Loading...</div>;
     if (error) return <div className="text-red-500 p-4">{error}</div>;
-
 
     const handleAcceptRide = async (rideId) => {
         try {
@@ -41,10 +39,8 @@ const MatchingRides = () => {
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-    
-            // Update the UI or notify the driver about the successful acceptance
+
             alert('Ride accepted successfully!');
-            // Optionally, you can update the UI state to reflect the accepted status
             setRides((prevRides) =>
                 prevRides.map((ride) =>
                     ride._id === rideId ? { ...ride, status: 'accepted' } : ride
@@ -55,60 +51,36 @@ const MatchingRides = () => {
             alert('Failed to accept ride');
         }
     };
-    
 
     return (
-        <div className="w-full max-w-6xl mx-auto bg-white rounded-lg shadow-lg">
-            <div className="p-6">
-                <h2 className="text-2xl font-bold mb-4">Matching Rides</h2>
+        <div className="w-full max-w-6xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+            <div className="p-8">
+                <h2 className="text-3xl font-extrabold text-black mb-6"> Rides</h2>
                 {rides.length > 0 ? (
                     <div className="overflow-x-auto">
                         <table className="min-w-full border-collapse">
-                            <thead className="bg-gray-50">
+                            <thead className="bg-yellow-500 text-white">
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Username
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Pickup Location
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Dropoff Location
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Passengers
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Date & Time
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Actions
-                                    </th>
+                                    <th className="px-6 py-4 text-left text-sm font-medium">Username</th>
+                                    <th className="px-6 py-4 text-left text-sm font-medium">Pickup Location</th>
+                                    <th className="px-6 py-4 text-left text-sm font-medium">Dropoff Location</th>
+                                    <th className="px-6 py-4 text-left text-sm font-medium">Passengers</th>
+                                    <th className="px-6 py-4 text-left text-sm font-medium">Date & Time</th>
+                                    <th className="px-6 py-4 text-left text-sm font-medium">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
                                 {rides.map((ride) => (
-                                    <tr key={ride._id} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            {ride.userId?.username || ride.userId?.name || 'N/A'}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            {ride.pickup?.address || 'Not provided'}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            {ride.dropoff?.address || 'Not provided'}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            {ride.numPassengers}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            {new Date(ride.scheduledDateTime).toLocaleString()}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            
+                                    <tr key={ride._id} className="hover:bg-gray-100">
+                                        <td className="px-6 py-4 text-black">{ride.userId?.username || ride.userId?.name || 'N/A'}</td>
+                                        <td className="px-6 py-4 text-black">{ride.pickup?.address || 'Not provided'}</td>
+                                        <td className="px-6 py-4 text-black">{ride.dropoff?.address || 'Not provided'}</td>
+                                        <td className="px-6 py-4 text-black">{ride.numPassengers}</td>
+                                        <td className="px-6 py-4 text-black">{new Date(ride.scheduledDateTime).toLocaleString()}</td>
+                                        <td className="px-6 py-4">
                                             {ride.status === 'pending' && (
                                                 <button
-                                                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition-colors duration-200"
+                                                    className="bg-yellow-500 text-black hover:bg-yellow-600 px-6 py-2 rounded-md transition-colors duration-200 font-semibold"
                                                     onClick={() => handleAcceptRide(ride._id)}
                                                 >
                                                     Accept Ride
@@ -121,7 +93,7 @@ const MatchingRides = () => {
                         </table>
                     </div>
                 ) : (
-                    <p className="text-center p-4 text-gray-500">No matching rides found</p>
+                    <p className="text-center text-gray-500 mt-8">No matching rides found</p>
                 )}
             </div>
         </div>

@@ -390,7 +390,7 @@ const AdminDashboard = () => {
   return (
     <div className="admin-dashboard flex">
       {/* Sidebar */}
-      <div className={`relative min-h-screen border-r border-gray-200 bg-black/70 transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-64'}`}>
+      <div className={`relative min-h-screen border-r border-gray-200 bg-white/70 transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-64'}`}>
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="absolute -right-3 top-6 bg-white border border-gray-200 text-gray-600 rounded-full p-1.5 shadow-sm hover:bg-gray-50 transition-colors duration-200"
@@ -429,7 +429,7 @@ const AdminDashboard = () => {
       </div>
 
       {/* Dashboard Content */}
-      <div className="dashboard-content flex-grow p-6 bg-black/70">
+      <div className="dashboard-content flex-grow p-6 bg-white/70">
         {renderContent()}
       </div>
     </div>

@@ -250,6 +250,8 @@ import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import CreatedRides from './MyRides';
 import AcceptedRides from './AcceptedRides';
+import Footer from './Footer';
+
 
 
 const UserPanel = () => {
@@ -320,7 +322,7 @@ const UserPanel = () => {
       <header className="bg-black shadow-lg">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <div className="flex items-center space-x-4">
-            <span className="text-yellow-500 font-bold text-2xl">RideShare</span>
+            <span className="text-yellow-500 font-bold text-2xl">wayX</span>
           </div>
           <button
             onClick={handleLogout}
@@ -331,6 +333,7 @@ const UserPanel = () => {
           </button>
         </div>
       </header>
+      
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
@@ -490,6 +493,7 @@ const UserPanel = () => {
           </div>
         )}
       </div>
+      < Footer />
     </div>
   );
 };
