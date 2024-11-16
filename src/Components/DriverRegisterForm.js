@@ -141,9 +141,9 @@ function DriverRegisterForm() {
       />
       <label 
         htmlFor={name} 
-        className="w-full px-4 py-3 bg-black text-yellow-500 border-2 border-yellow-500 rounded-xl 
+        className="w-full px-4 py-3 bg-black text-yellow-600 border-2 border-yellow-600 rounded-xl 
                    cursor-pointer flex items-center justify-between 
-                   hover:bg-yellow-500 hover:text-black transition duration-300"
+                   hover:bg-yellow-600 hover:text-black transition duration-300"
       >
         <span>{label}</span>
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -157,15 +157,15 @@ function DriverRegisterForm() {
   return (
     <div className="min-h-screen bg-black flex items-center justify-center p-4 overflow-hidden relative">
       {/* Diagonal Yellow Accent */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-500 transform rotate-45 translate-x-1/2 -translate-y-1/2 opacity-20"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-600 transform rotate-45 translate-x-1/2 -translate-y-1/2 opacity-20"></div>
       
       <div className="w-full max-w-xl z-10 relative">
-        <div className="bg-black border-2 border-yellow-500 rounded-3xl shadow-2xl overflow-hidden">
+        <div className="bg-black border-2 border-yellow-600 rounded-3xl shadow-2xl overflow-hidden">
           <div className="p-8 relative">
             {/* Pulsing Yellow Accent Dot */}
-            <div className="absolute top-4 right-4 w-4 h-4 bg-yellow-500 rounded-full animate-pulse"></div>
+            <div className="absolute top-4 right-4 w-4 h-4 bg-yellow-600 rounded-full animate-pulse"></div>
             
-            <h2 className="text-3xl font-bold text-center text-yellow-500 mb-8 uppercase tracking-wider">
+            <h2 className="text-3xl font-bold text-center text-yellow-600 mb-8 uppercase tracking-wider">
               Driver Registration
             </h2>
 
@@ -190,8 +190,8 @@ function DriverRegisterForm() {
                     placeholder="Username"
                     value={formData.username}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-black text-yellow-500 border-2 border-yellow-500 rounded-xl 
-                               focus:outline-none focus:ring-2 focus:ring-yellow-500 
+                    className="w-full px-4 py-3 bg-black text-yellow-600 border-2 border-yellow-600 rounded-xl 
+                               focus:outline-none focus:ring-2 focus:ring-yellow-600 
                                placeholder-yellow-700 transition duration-300"
                   />
                   {errors.username && <p className="text-red-400 text-sm mt-1">{errors.username}</p>}
@@ -203,8 +203,8 @@ function DriverRegisterForm() {
                     placeholder="Email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-black text-yellow-500 border-2 border-yellow-500 rounded-xl 
-                               focus:outline-none focus:ring-2 focus:ring-yellow-500 
+                    className="w-full px-4 py-3 bg-black text-yellow-600 border-2 border-yellow-600 rounded-xl 
+                               focus:outline-none focus:ring-2 focus:ring-yellow-600 
                                placeholder-yellow-700 transition duration-300"
                   />
                   {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
@@ -218,8 +218,8 @@ function DriverRegisterForm() {
                   placeholder="Password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-black text-yellow-500 border-2 border-yellow-500 rounded-xl 
-                             focus:outline-none focus:ring-2 focus:ring-yellow-500 
+                  className="w-full px-4 py-3 bg-black text-yellow-600 border-2 border-yellow-600 rounded-xl 
+                             focus:outline-none focus:ring-2 focus:ring-yellow-600 
                              placeholder-yellow-700 transition duration-300"
                 />
                 {errors.password && <p className="text-red-400 text-sm mt-1">{errors.password}</p>}
@@ -233,8 +233,8 @@ function DriverRegisterForm() {
                     placeholder="Vehicle Type"
                     value={formData.vehicleType}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-black text-yellow-500 border-2 border-yellow-500 rounded-xl 
-                               focus:outline-none focus:ring-2 focus:ring-yellow-500 
+                    className="w-full px-4 py-3 bg-black text-yellow-600 border-2 border-yellow-600 rounded-xl 
+                               focus:outline-none focus:ring-2 focus:ring-yellow-600 
                                placeholder-yellow-700 transition duration-300"
                   />
                   {errors.vehicleType && <p className="text-red-400 text-sm mt-1">{errors.vehicleType}</p>}
@@ -246,8 +246,8 @@ function DriverRegisterForm() {
                     placeholder="phone Number"
                     value={formData.phoneNumber}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-black text-yellow-500 border-2 border-yellow-500 rounded-xl 
-                               focus:outline-none focus:ring-2 focus:ring-yellow-500 
+                    className="w-full px-4 py-3 bg-black text-yellow-600 border-2 border-yellow-600 rounded-xl 
+                               focus:outline-none focus:ring-2 focus:ring-yellow-600 
                                placeholder-yellow-700 transition duration-300"
                   />
                   {errors.phoneNumber && <p className="text-red-400 text-sm mt-1">{errors.phoneNumber}</p>}
@@ -259,8 +259,8 @@ function DriverRegisterForm() {
                     placeholder="Vehicle Number"
                     value={formData.vehicleNumber}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-black text-yellow-500 border-2 border-yellow-500 rounded-xl 
-                               focus:outline-none focus:ring-2 focus:ring-yellow-500 
+                    className="w-full px-4 py-3 bg-black text-yellow-600 border-2 border-yellow-600 rounded-xl 
+                               focus:outline-none focus:ring-2 focus:ring-yellow-600 
                                placeholder-yellow-700 transition duration-300"
                   />
                   {errors.vehicleNumber && <p className="text-red-400 text-sm mt-1">{errors.vehicleNumber}</p>}
@@ -288,15 +288,15 @@ function DriverRegisterForm() {
               <button 
                 type="submit" 
                 onSubmit={handleSubmit}
-                className="w-full bg-yellow-500 text-black py-3 rounded-xl 
+                className="w-full bg-yellow-600 text-black py-3 rounded-xl 
                            hover:bg-yellow-400 transition duration-300 
                            transform hover:scale-105 font-bold uppercase tracking-wider 
-                           shadow-lg hover:shadow-yellow-500/50"
+                           shadow-lg hover:shadow-yellow-600/50"
               >
                 Register as Driver
               </button>
 
-              <p className="text-center text-yellow-500 mt-4">
+              <p className="text-center text-yellow-600 mt-4">
                 Already registered? {' '}
                 <Link 
                   to="/driver-login" 
@@ -311,8 +311,8 @@ function DriverRegisterForm() {
         </div>
 
         {/* Abstract Background Elements */}
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-yellow-500 rounded-full opacity-10 blur-2xl animate-blob"></div>
-        <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-500 rounded-full opacity-10 blur-2xl animate-blob animation-delay-2000"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-yellow-600 rounded-full opacity-10 blur-2xl animate-blob"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-600 rounded-full opacity-10 blur-2xl animate-blob animation-delay-2000"></div>
       </div>
     </div>
   );

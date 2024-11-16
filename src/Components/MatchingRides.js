@@ -28,7 +28,7 @@ const MatchingRides = () => {
         fetchRides();
     }, []);
 
-    if (loading) return <div className="flex justify-center p-4 text-yellow-500">Loading...</div>;
+    if (loading) return <div className="flex justify-center p-4 text-yellow-600">Loading...</div>;
     if (error) return <div className="text-red-500 p-4">{error}</div>;
 
     const handleAcceptRide = async (rideId) => {
@@ -59,7 +59,7 @@ const MatchingRides = () => {
                 {rides.length > 0 ? (
                     <div className="overflow-x-auto">
                         <table className="min-w-full border-collapse">
-                            <thead className="bg-yellow-500 text-white">
+                            <thead className="bg-yellow-600 text-white">
                                 <tr>
                                     <th className="px-6 py-4 text-left text-sm font-medium">Username</th>
                                     <th className="px-6 py-4 text-left text-sm font-medium">Pickup Location</th>
@@ -80,7 +80,7 @@ const MatchingRides = () => {
                                         <td className="px-6 py-4">
                                             {ride.status === 'pending' && (
                                                 <button
-                                                    className="bg-yellow-500 text-black hover:bg-yellow-600 px-6 py-2 rounded-md transition-colors duration-200 font-semibold"
+                                                    className="bg-yellow-600 text-black hover:bg-yellow-600 px-6 py-2 rounded-md transition-colors duration-200 font-semibold"
                                                     onClick={() => handleAcceptRide(ride._id)}
                                                 >
                                                     Accept Ride

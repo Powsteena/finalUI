@@ -5,7 +5,7 @@ const DriverProfile = ({ driverData, onLogout }) => {
   const [showDetails, setShowDetails] = useState(false);
 
   const stats = [
-    { label: 'Rating', value: driverData.rating, icon: Star, color: 'text-yellow-500' },
+    { label: 'Rating', value: driverData.rating, icon: Star, color: 'text-yellow-600' },
     { label: 'Total Rides', value: driverData.totalRides, icon: Activity, color: 'text-blue-500' },
     { label: 'Vehicle', value: driverData.vehicleType, icon: Car, color: 'text-green-500' },
   ];

@@ -37,7 +37,7 @@ const MatchingRides = () => {
             ) : (
                 <div className="overflow-x-auto">
                     <table className="min-w-full table-auto bg-white shadow-md rounded-lg">
-                        <thead className="bg-yellow-500 text-white">
+                        <thead className="bg-yellow-600 text-white">
                             <tr>
                                 <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">Username</th>
                                 <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">Pickup Location</th>
@@ -56,7 +56,7 @@ const MatchingRides = () => {
                                     <td className="px-6 py-4 text-sm text-gray-600">{new Date(ride.scheduledDateTime).toLocaleString()}</td>
                                     <td className="px-6 py-4 text-sm text-gray-800">${ride.fare ? ride.fare.toFixed(2) : 'N/A'}</td>
                                     <td className="px-6 py-4 text-sm">
-                                        <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${ride.status === 'accepted' ? 'bg-green-500 text-white' : 'bg-yellow-500 text-black'}`}>
+                                        <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${ride.status === 'accepted' ? 'bg-green-500 text-white' : 'bg-yellow-600 text-black'}`}>
                                             {ride.status}
                                         </span>
                                     </td>

@@ -28,7 +28,7 @@ const InnerNavbar = () => {
           {/* Logout Button */}
           <button
             onClick={handleLogout}
-            className="bg-yellow-500 text-white px-6 py-3 rounded-full flex items-center space-x-2 hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 font-medium"
+            className="bg-yellow-600 text-white px-6 py-3 rounded-full flex items-center space-x-2 hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 font-medium"
           >
             <LogOut size={20} />
             <span>Logout</span>

@@ -68,13 +68,13 @@ const ManageRides = () => {
   const getStatusIcon = (status) => {
     switch (status.toLowerCase()) {
       case 'completed':
-        return <CheckCircle className="text-green-500" size={18} />;
+        return <CheckCircle className="text-yellow-600" size={18} />;
       case 'cancelled':
-        return <XCircle className="text-red-500" size={18} />;
+        return <XCircle className="text-yellow-600" size={18} />;
       case 'pending':
-        return <AlertCircle className="text-yellow-500" size={18} />;
+        return <AlertCircle className="text-yellow-600" size={18} />;
       default:
-        return <Clock className="text-blue-500" size={18} />;
+        return <Clock className="text-yellow-600" size={18} />;
     }
   };
 
@@ -90,112 +90,116 @@ const ManageRides = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="animate-spin text-yellow-500" size={48} />
+      <div className="flex items-center justify-center min-h-screen bg-black">
+        <Loader2 className="animate-spin text-yellow-600" size={48} />
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto my-8 bg-white rounded-lg shadow-lg">
-      <div className="bg-yellow-500 p-6 rounded-t-lg">
-        <h1 className="text-black text-2xl font-bold flex items-center gap-2">
-          <Car size={24} /> Manage Ride Requests
-        </h1>
-      </div>
+    <div className="min-h-screen bg-black/70 p-6">
+      <div className="max-w-4xl mx-auto bg-black border border-yellow-600 rounded-lg shadow-lg overflow-hidden">
+        <div className="border-b border-yellow-600 p-6">
+          <h1 className="text-white text-2xl font-bold flex items-center gap-2">
+            <Car size={24} /> Manage Ride Requests
+          </h1>
+        </div>
       
-      <div className="p-6">
-        {error && (
-          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded">
-            {error}
-          </div>
-        )}
-        {successMessage && (
-          <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded">
-            {successMessage}
-          </div>
-        )}
+        <div className="p-6">
+          {error && (
+            <div className="border border-yellow-600 text-white p-4 mb-4 rounded">
+              {error}
+            </div>
+          )}
+          {successMessage && (
+            <div className="border border-yellow-600 text-white p-4 mb-4 rounded">
+              {successMessage}
+            </div>
+          )}
         
-        <div className="overflow-x-auto">
-          <table className="min-w-full">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-6 py-3 text-left text-sm font-bold text-gray-700">Status</th>
-                <th className="px-6 py-3 text-left text-sm font-bold text-gray-700">Date</th>
-                <th className="px-6 py-3 text-left text-sm font-bold text-gray-700">Pickup</th>
-                <th className="px-6 py-3 text-left text-sm font-bold text-gray-700">Dropoff</th>
-                <th className="px-6 py-3 text-left text-sm font-bold text-gray-700">Vehicle</th>
-                <th className="px-6 py-3 text-left text-sm font-bold text-gray-700">Passengers</th>
-                <th className="px-6 py-3 text-left text-sm font-bold text-gray-700">User</th>
-                <th className="px-6 py-3 text-left text-sm font-bold text-gray-700">Driver</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {rideRequests.length > 0 ? (
-                rideRequests.map((request) => (
-                  <tr 
-                    key={request._id}
-                    className="hover:bg-gray-50 transition-colors"
-                  >
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        {getStatusIcon(request.status)}
-                        <span className="font-medium">{request.status}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <Calendar size={16} className="text-gray-500" />
-                        {formatDate(request.createdAt)}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <MapPin size={16} className="text-yellow-500" />
-                        {request.pickup?.address || 'N/A'}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <MapPin size={16} className="text-black" />
-                        {request.dropoff?.address || 'N/A'}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <Car size={16} className="text-gray-500" />
-                        {request.vehicleType}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <Users size={16} className="text-gray-500" />
-                        {request.numPassengers}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <User size={16} className="text-yellow-500" />
-                        {request.userId ? request.userId.username : 'N/A'}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <User size={16} className="text-black" />
-                        {request.driverId ? request.driverId.username : 'Not Assigned'}
-                      </div>
-                    </td>
+          <div className="overflow-x-auto">
+            <div className="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-yellow-600 scrollbar-track-black">
+              <table className="min-w-full">
+                <thead className="border-b border-yellow-600 sticky top-0 bg-black z-10">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-sm font-bold text-white">Status</th>
+                    <th className="px-6 py-3 text-left text-sm font-bold text-white">Date</th>
+                    <th className="px-6 py-3 text-left text-sm font-bold text-white">Pickup</th>
+                    <th className="px-6 py-3 text-left text-sm font-bold text-white">Dropoff</th>
+                    <th className="px-6 py-3 text-left text-sm font-bold text-white">Vehicle</th>
+                    <th className="px-6 py-3 text-left text-sm font-bold text-white">Passengers</th>
+                    <th className="px-6 py-3 text-left text-sm font-bold text-white">User</th>
+                    <th className="px-6 py-3 text-left text-sm font-bold text-white">Driver</th>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={8} className="text-center py-8 text-gray-500">
-                    No ride requests found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                </thead>
+                <tbody className="divide-y divide-yellow-600/30">
+                  {rideRequests.length > 0 ? (
+                    rideRequests.map((request) => (
+                      <tr 
+                        key={request._id}
+                        className="hover:bg-yellow-600/5 transition-colors"
+                      >
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2 text-white">
+                            {getStatusIcon(request.status)}
+                            <span className="font-medium">{request.status}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2 text-white">
+                            <Calendar size={24} />
+                            {formatDate(request.createdAt)}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2 text-white">
+                            <MapPin size={16} />
+                            {request.pickup?.address || 'N/A'}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2 text-white">
+                            <MapPin size={16} />
+                            {request.dropoff?.address || 'N/A'}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2 text-white">
+                            <Car size={16} />
+                            {request.vehicleType}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2 text-white">
+                            <Users size={16} />
+                            {request.numPassengers}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2 text-white">
+                            <User size={16} />
+                            {request.userId ? request.userId.username : 'N/A'}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2 text-white">
+                            <User size={16} />
+                            {request.driverId ? request.driverId.username : 'Not Assigned'}
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={8} className="text-center py-8 text-yellow-600">
+                        No ride requests found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>

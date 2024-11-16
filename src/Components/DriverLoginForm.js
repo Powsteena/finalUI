@@ -101,15 +101,15 @@ function DriverLoginForm() {
   return (
     <div className="min-h-screen bg-black flex items-center justify-center p-4 overflow-hidden relative">
       {/* Diagonal Yellow Accent */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-500 transform rotate-45 translate-x-1/2 -translate-y-1/2 opacity-20"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-600 transform rotate-45 translate-x-1/2 -translate-y-1/2 opacity-20"></div>
 
       <div className="w-full max-w-md z-10 relative">
-        <div className="bg-black border-2 border-yellow-500 rounded-3xl shadow-2xl overflow-hidden">
+        <div className="bg-black border-2 border-yellow-600 rounded-3xl shadow-2xl overflow-hidden">
           <div className="p-8 relative">
             {/* Pulsing Yellow Accent Dot */}
-            <div className="absolute top-4 right-4 w-4 h-4 bg-yellow-500 rounded-full animate-pulse"></div>
+            <div className="absolute top-4 right-4 w-4 h-4 bg-yellow-600 rounded-full animate-pulse"></div>
             
-            <h2 className="text-3xl font-bold text-center text-yellow-500 mb-8 uppercase tracking-wider">
+            <h2 className="text-3xl font-bold text-center text-yellow-600 mb-8 uppercase tracking-wider">
               Driver Login
             </h2>
 
@@ -128,8 +128,8 @@ function DriverLoginForm() {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-black text-yellow-500 border-2 border-yellow-500 rounded-xl 
-                             focus:outline-none focus:ring-2 focus:ring-yellow-500 
+                  className="w-full px-4 py-3 bg-black text-yellow-600 border-2 border-yellow-600 rounded-xl 
+                             focus:outline-none focus:ring-2 focus:ring-yellow-600 
                              placeholder-yellow-700 transition duration-300"
                 />
                 {errors.email && (
@@ -145,8 +145,8 @@ function DriverLoginForm() {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-black text-yellow-500 border-2 border-yellow-500 rounded-xl 
-                             focus:outline-none focus:ring-2 focus:ring-yellow-500 
+                  className="w-full px-4 py-3 bg-black text-yellow-600 border-2 border-yellow-600 rounded-xl 
+                             focus:outline-none focus:ring-2 focus:ring-yellow-600 
                              placeholder-yellow-700 transition duration-300"
                 />
                 {errors.password && (
@@ -156,15 +156,15 @@ function DriverLoginForm() {
 
               <button 
                 type="submit" 
-                className="w-full bg-yellow-500 text-black py-3 rounded-xl 
+                className="w-full bg-yellow-600 text-black py-3 rounded-xl 
                            hover:bg-yellow-400 transition duration-300 
                            transform hover:scale-105 font-bold uppercase tracking-wider 
-                           shadow-lg hover:shadow-yellow-500/50"
+                           shadow-lg hover:shadow-yellow-600/50"
               >
                 Login as Driver
               </button>
 
-              <p className="text-center text-yellow-500 mt-4">
+              <p className="text-center text-yellow-600 mt-4">
                 Don't have an account? {' '}
                 <Link 
                   to="/driver-register" 

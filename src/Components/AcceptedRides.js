@@ -34,25 +34,7 @@ const MyAcceptedRides = () => {
                 }
             } catch (err) {
                 console.error('Error details:', err);
-                if (err.response) {
-                    switch (err.response.status) {
-                        case 401:
-                            setError('Session expired. Please login again.');
-                            break;
-                        case 404:
-                            setError('No rides found.');
-                            break;
-                        case 500:
-                            setError('Server error. Please try again later.');
-                            break;
-                        default:
-                            setError('An error occurred while fetching your rides.');
-                    }
-                } else if (err.request) {
-                    setError('Unable to connect to server. Please check your internet connection.');
-                } else {
-                    setError('An unexpected error occurred.');
-                }
+                setError(err.response?.status === 404 ? 'No rides found.' : 'Failed to fetch rides');
             } finally {
                 setLoading(false);
             }
@@ -63,121 +45,123 @@ const MyAcceptedRides = () => {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center p-8">
-                <div className="animate-spin rounded-full h-12 w-12 border-4 border-yellow-500 border-t-transparent"></div>
+            <div className="flex justify-center items-center min-h-[200px]">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600"></div>
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg m-4" role="alert">
-                <div className="flex">
-                    <div className="flex-shrink-0">
-                        <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                        </svg>
-                    </div>
-                    <div className="ml-3">
-                        <p className="text-sm text-red-700">{error}</p>
-                    </div>
-                </div>
+            <div className="text-red-500 p-4 text-center bg-red-50 rounded-lg">
+                {error}
             </div>
         );
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4">
+            <div className="flex justify-between items-center px-4">
+                <h2 className="text-2xl font-bold text-gray-800">My Accepted Rides</h2>
+            </div>
+
             {rides.length === 0 ? (
-                <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-lg">
-                    <div className="flex">
-                        <div className="flex-shrink-0">
-                            <svg className="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                            </svg>
-                        </div>
-                        <div className="ml-3">
-                            <p className="text-sm text-yellow-700">No accepted rides found</p>
+                <div className="text-center py-8 text-gray-500">
+                    No accepted rides found.
+                </div>
+            ) : (
+                <div className="relative">
+                    <div className="overflow-x-auto pb-4 hide-scrollbar">
+                        <div className="flex space-x-4 px-4">
+                            {rides.map((ride) => (
+                                <div 
+                                    key={ride._id} 
+                                    className="flex-shrink-0 w-[320px] bg-white rounded-lg shadow-sm border border-gray-100 relative hover:shadow-md transition-all duration-200"
+                                >
+                                    {/* Status Header */}
+                                    <div className="bg-black p-3 rounded-t-lg">
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-sm font-medium text-yellow-600">#{ride._id.slice(-6)}</span>
+                                            <span className="px-2 py-1 rounded-full text-xs font-medium bg-yellow-600 text-black">
+                                                {ride.status}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="p-4 space-y-3">
+                                        {/* Locations */}
+                                        <div className="space-y-2">
+                                            <div className="flex items-start space-x-2">
+                                                <MapPin size={14} className="text-yellow-600 mt-1 flex-shrink-0" />
+                                                <div className="text-sm">
+                                                    <div className="text-xs text-gray-500">Pickup</div>
+                                                    <div className="text-gray-700 truncate max-w-[250px]">
+                                                        {ride.pickup?.address || 'Not provided'}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex items-start space-x-2">
+                                                <MapPin size={14} className="text-yellow-600 mt-1 flex-shrink-0" />
+                                                <div className="text-sm">
+                                                    <div className="text-xs text-gray-500">Dropoff</div>
+                                                    <div className="text-gray-700 truncate max-w-[250px]">
+                                                        {ride.dropoff?.address || 'Not provided'}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Driver Info */}
+                                        <div className="bg-yellow-50 rounded-lg p-3 space-y-2 mt-2">
+                                            <div className="flex items-center space-x-2">
+                                                <User size={14} className="text-yellow-600" />
+                                                <div className="text-sm">
+                                                    <div className="text-xs text-gray-500">Driver</div>
+                                                    <div className="text-gray-700">{ride.driverId?.username || 'Not assigned'}</div>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex items-center space-x-2">
+                                                <Car size={14} className="text-yellow-600" />
+                                                <div className="text-sm">
+                                                    <div className="text-xs text-gray-500">Vehicle</div>
+                                                    <div className="text-gray-700 truncate">
+                                                        {ride.driverId?.vehicleType || 'Not provided'} - {ride.driverId?.vehicleNumber || 'No number'}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex items-center space-x-2">
+                                                <Phone size={14} className="text-yellow-600" />
+                                                <div className="text-sm">
+                                                    <div className="text-xs text-gray-500">Contact</div>
+                                                    <div className="text-gray-700">{ride.driverId?.phoneNumber || 'Not provided'}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Scheduled Time */}
+                                        <div className="text-xs text-gray-500 pt-2 border-t border-gray-100">
+                                            Scheduled: {new Date(ride.scheduledDateTime).toLocaleString()}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
-            ) : (
-                <div className="grid gap-6 md:grid-cols-2">
-                    {rides.map((ride) => (
-                        <div 
-                            key={ride._id} 
-                            className="bg-white shadow-xl rounded-xl overflow-hidden border border-black/10"
-                        >
-                            {/* Ride Status Header */}
-                            <div className="bg-black px-6 py-4">
-                                <div className="flex justify-between items-center">
-                                    <h2 className="text-lg font-semibold text-yellow-500">Ride #{ride._id.slice(-6)}</h2>
-                                    <span className="px-3 py-1 rounded-full text-sm font-medium bg-yellow-500 text-black">
-                                        {ride.status}
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Ride Details */}
-                            <div className="p-6 space-y-6">
-                                {/* Location Details */}
-                                <div className="space-y-3">
-                                    <div className="flex items-start space-x-3">
-                                        <MapPin className="w-5 h-5 text-yellow-500 mt-1" />
-                                        <div>
-                                            <p className="text-sm font-medium text-black/60">Pickup Location</p>
-                                            <p className="text-black">{ride.pickup?.address || 'Not provided'}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start space-x-3">
-                                        <MapPin className="w-5 h-5 text-yellow-500 mt-1" />
-                                        <div>
-                                            <p className="text-sm font-medium text-black/60">Dropoff Location</p>
-                                            <p className="text-black">{ride.dropoff?.address || 'Not provided'}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Driver Details */}
-                                <div className="bg-yellow-50 rounded-lg p-4 space-y-3">
-                                    <h3 className="font-semibold text-black">Driver Information</h3>
-                                    
-                                    <div className="flex items-center space-x-3">
-                                        <User className="w-5 h-5 text-yellow-500" />
-                                        <div>
-                                            <p className="text-sm font-medium text-black/60">Driver Name</p>
-                                            <p className="text-black">{ride.driverId?.username || 'Not assigned'}</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-center space-x-3">
-                                        <Car className="w-5 h-5 text-yellow-500" />
-                                        <div>
-                                            <p className="text-sm font-medium text-black/60">Vehicle Details</p>
-                                            <p className="text-black">
-                                                {ride.driverId?.vehicleType || 'Not provided'} - {ride.driverId?.vehicleNumber || 'No vehicle number'}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-center space-x-3">
-                                        <Phone className="w-5 h-5 text-yellow-500" />
-                                        <div>
-                                            <p className="text-sm font-medium text-black/60">Contact Number</p>
-                                            <p className="text-black">{ride.driverId?.phoneNumber || 'Not provided'}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Scheduled Time */}
-                                <div className="text-sm text-black/60">
-                                    Scheduled for: {new Date(ride.scheduledDateTime).toLocaleString()}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
             )}
+
+            <style jsx global>{`
+                .hide-scrollbar::-webkit-scrollbar {
+                    display: none;
+                }
+                .hide-scrollbar {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
+            `}</style>
         </div>
     );
 };
