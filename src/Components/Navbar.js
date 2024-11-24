@@ -8,7 +8,10 @@ const InnerNavbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Add your logout logic here
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('email');
+    localStorage.removeItem('driverId');
     navigate('/');
   };
 

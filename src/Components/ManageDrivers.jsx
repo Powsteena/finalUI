@@ -1,10 +1,22 @@
 import React, { useState, useEffect } from 'react';
+import { 
+  Car, 
+  User, 
+  Calendar,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+  Loader2,
+  FileText,
+  Phone,
+  Mail
+} from 'lucide-react';
 
 function ManageDrivers() {
   const [drivers, setDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [notification, setNotification] = useState({ show: false, message: '', type: '' });
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     fetchDrivers();
@@ -30,16 +42,10 @@ function ManageDrivers() {
     }
   };
 
-  const showNotification = (message, type = 'success') => {
-    setNotification({ show: true, message, type });
-    setTimeout(() => {
-      setNotification({ show: false, message: '', type: '' });
-    }, 3000);
-  };
-
   const handleAction = async (action, driverId) => {
     try {
       setError(null);
+      setSuccessMessage('');
       const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('No token found, please log in.');
@@ -58,113 +64,161 @@ function ManageDrivers() {
       });
       
       const data = await response.json();
-      showNotification(data.msg);
+      setSuccessMessage(data.msg);
       fetchDrivers();
     } catch (err) {
       console.error(`Error performing ${action}:`, err);
-      showNotification(err.response?.data?.msg || err.message || `Error performing ${action}`, 'error');
+      setError(err.response?.data?.msg || err.message || `Error performing ${action}`);
     }
   };
 
   if (loading) {
-    return <div className="flex items-center justify-center min-h-screen text-yellow-600">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-black">
+        <Loader2 className="animate-spin text-yellow-600" size={48} />
+      </div>
+    );
   }
 
   return (
-    <div className="bg-black/60 min-h-screen p-6">
+    <div className="min-h-screen bg-black/70 p-6">
       <div className="max-w-7xl mx-auto bg-black border border-yellow-600 rounded-lg shadow-lg overflow-hidden">
         <div className="border-b border-yellow-600 p-6">
-          <h2 className="text-2xl font-bold text-yellow-600">Manage Drivers</h2>
+          <h1 className="text-white text-2xl font-bold flex items-center gap-2">
+            <Car size={24} /> Manage Drivers
+          </h1>
         </div>
 
-        {notification.show && (
-          <div className={`m-6 p-4 border ${notification.type === 'success' ? 'border-yellow-600 text-yellow-600' : 'border-yellow-600 text-yellow-600'} rounded-lg`}>
-            {notification.message}
-          </div>
-        )}
+        <div className="p-6">
+          {error && (
+            <div className="border border-yellow-600 text-white p-4 mb-4 rounded">
+              {error}
+            </div>
+          )}
+          {successMessage && (
+            <div className="border border-yellow-600 text-white p-4 mb-4 rounded">
+              {successMessage}
+            </div>
+          )}
 
-        {error && (
-          <div className="m-6 p-4 border border-yellow-600 text-yellow-600 rounded-lg">
-            {error}
-          </div>
-        )}
-
-        <div className="overflow-x-auto p-6">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-yellow-600">
-                <th className="text-left p-4 text-white">Driver Info</th>
-                <th className="text-left p-4 text-white">Vehicle Details</th>
-                <th className="text-left p-4 text-white hidden lg:table-cell">Documents</th>
-                <th className="text-left p-4 text-white">Status</th>
-                <th className="text-left p-4 text-white hidden md:table-cell">Registration Date</th>
-                <th className="text-left p-4 text-white">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {drivers.length > 0 ? (
-                drivers.map((driver) => (
-                  <tr key={driver._id} className="border-b border-white hover:bg-yellow-600/10">
-                    <td className="p-4">
-                      <div className="space-y-1">
-                        <div className="text-white font-medium">{driver.username}</div>
-                        <div className="text-white text-sm">{driver.email}</div>
-                        <div className="text-white text-sm">Phone: {driver.phoneNumber}</div>
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <div className="space-y-1 text-white">
-                        <div>Type: {driver.vehicleType}</div>
-                        <div>Number: {driver.vehicleNumber}</div>
-                      </div>
-                    </td>
-                    <td className="p-4 hidden lg:table-cell">
-                      <div className="space-y-2">
-                        <a className="block text-white hover:underline cursor-pointer">License Image</a>
-                        <a className="block text-white hover:underline cursor-pointer">Vehicle Registration</a>
-                        <a className="block text-white hover:underline cursor-pointer">Insurance Document</a>
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <div className="space-y-2">
-                        <span className={`inline-block px-3 py-1 rounded-full text-xs border ${driver.isApproved ? 'border-yellow-600 text-white' : 'border-yellow-600 text-yellow-600'}`}>
-                          {driver.isApproved ? 'Approved' : 'Pending'}
-                        </span>
-                        <span className={`inline-block px-3 py-1 rounded-full text-xs border ${driver.hasPaid ? 'border-yellow-600 text-white' : 'border-yellow-600 text-yellow-600'}`}>
-                          {driver.hasPaid ? 'Paid' : 'Unpaid'}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="p-4 hidden md:table-cell text-white">
-                      {new Date(driver.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="p-4">
-                      <div className="flex flex-col space-y-2">
-                        <button
-                          className="px-4 py-2 border border-yellow-600 text-white rounded hover:bg-yellow-600 hover:text-black transition-colors"
-                          onClick={() => handleAction(driver.isApproved ? 'reject' : 'approve', driver._id)}
-                        >
-                          {driver.isApproved ? 'Reject' : 'Approve'}
-                        </button>
-                        <button
-                          className="px-4 py-2 border border-yellow-600 text-white rounded hover:bg-yellow-600 hover:text-black transition-colors"
-                          onClick={() => handleAction('delete', driver._id)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </td>
+          <div className="overflow-x-auto">
+            <div className="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-yellow-600 scrollbar-track-black">
+              <table className="min-w-full">
+                <thead className="border-b border-yellow-600 sticky top-0 bg-black z-10">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-sm font-bold text-white">Driver Info</th>
+                    <th className="px-6 py-3 text-left text-sm font-bold text-white">Vehicle Details</th>
+                    <th className="px-6 py-3 text-left text-sm font-bold text-white">Documents</th>
+                    <th className="px-6 py-3 text-left text-sm font-bold text-white">Status</th>
+                    <th className="px-6 py-3 text-left text-sm font-bold text-white">Registration Date</th>
+                    <th className="px-6 py-3 text-left text-sm font-bold text-white">Actions</th>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={6} className="text-center p-4 text-yellow-600">
-                    No drivers found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                </thead>
+                <tbody className="divide-y divide-yellow-600/30">
+                  {drivers.length > 0 ? (
+                    drivers.map((driver) => (
+                      <tr 
+                        key={driver._id} 
+                        className="hover:bg-yellow-600/5 transition-colors"
+                      >
+                        <td className="px-6 py-4">
+                          <div className="space-y-2 text-white">
+                            <div className="flex items-center gap-2">
+                              <User size={16} />
+                              {driver.username}
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Mail size={16} />
+                              {driver.email}
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Phone size={16} />
+                              {driver.phoneNumber}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2 text-white">
+                            <Car size={16} />
+                            <div>
+                              <div>Type: {driver.vehicleType}</div>
+                              <div>Number: {driver.vehicleNumber}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-white cursor-pointer hover:text-yellow-600">
+                              <FileText size={16} />
+                              License
+                            </div>
+                            <div className="flex items-center gap-2 text-white cursor-pointer hover:text-yellow-600">
+                              <FileText size={16} />
+                              Registration
+                            </div>
+                            <div className="flex items-center gap-2 text-white cursor-pointer hover:text-yellow-600">
+                              <FileText size={16} />
+                              Insurance
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                              {driver.isApproved ? 
+                                <CheckCircle className="text-yellow-600" size={16} /> : 
+                                <AlertCircle className="text-yellow-600" size={16} />
+                              }
+                              <span className="text-white">
+                                {driver.isApproved ? 'Approved' : 'Pending'}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {driver.hasPaid ? 
+                                <CheckCircle className="text-yellow-600" size={16} /> : 
+                                <XCircle className="text-yellow-600" size={16} />
+                              }
+                              <span className="text-white">
+                                {driver.hasPaid ? 'Paid' : 'Unpaid'}
+                              </span>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2 text-white">
+                            <Calendar size={16} />
+                            {new Date(driver.createdAt).toLocaleDateString()}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex flex-col gap-2">
+                            <button
+                              className="px-4 py-2 border border-yellow-600 text-white rounded hover:bg-yellow-600 hover:text-black transition-colors"
+                              onClick={() => handleAction(driver.isApproved ? 'reject' : 'approve', driver._id)}
+                            >
+                              {driver.isApproved ? 'Reject' : 'Approve'}
+                            </button>
+                            <button
+                              className="px-4 py-2 border border-yellow-600 text-white rounded hover:bg-yellow-600 hover:text-black transition-colors"
+                              onClick={() => handleAction('delete', driver._id)}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={6} className="text-center py-8 text-yellow-600">
+                        No drivers found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>

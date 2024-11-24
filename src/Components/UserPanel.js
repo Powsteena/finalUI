@@ -313,6 +313,8 @@ const UserPanel = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('email');
+    localStorage.removeItem('role');
     window.location.href = '/';
   };
 

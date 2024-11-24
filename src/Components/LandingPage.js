@@ -88,9 +88,73 @@ const LandingPage = () => {
     }
   ];
 
-  const handleSubmit = (e) => {
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  
+  const [formStatus, setFormStatus] = useState({
+    type: '',
+    message: ''
+  });
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value
+    });
+  };
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your form submission logic here
+    setIsSubmitting(true);
+    setFormStatus({ type: '', message: '' });
+  
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message
+        })
+      });
+  
+      const data = await response.json();
+  
+      if (data.success) {
+        setFormStatus({
+          type: 'success',
+          message: 'Message sent successfully! We will get back to you soon.'
+        });
+        // Clear form
+        setFormData({
+          fullName: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+      } else {
+        setFormStatus({
+          type: 'error',
+          message: data.message || 'Something went wrong. Please try again.'
+        });
+      }
+    } catch (error) {
+      setFormStatus({
+        type: 'error',
+        message: 'Failed to send message. Please try again later.'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
 
@@ -105,7 +169,7 @@ const LandingPage = () => {
               <img src={logo} alt="Logo" className="h-12" />
             </a>
 
-            <div className="hidden lg:flex items-center space-x-8">
+            <div className="hidden lg:flex items-center justify-center space-x-8">
               {navItems.map((item) => (
                 <a
                   key={item.label}
@@ -114,12 +178,12 @@ const LandingPage = () => {
                 >
                   {item.icon}
                   <span>{item.label}</span>
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-600 transition-all duration-300 group-hover:w-full"></span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-600 transition-all duration-300"></span>
                 </a>
               ))}
               <a
                 onClick={openLoginModal}
-                className="bg-yellow-600 text-white px-2 py-2 rounded-full flex items-center space-x-2 hover:from-yellow-600 transition-all duration-300 transform hover:scale-105 font-medium cursor-pointer"
+                className="bg-yellow-600 text-white px-2 py-2 rounded-full flex items-center  space-x-2 hover:from-yellow-600 transition-all duration-300 transform hover:scale-105 font-medium cursor-pointer"
               >
                 <LogIn size={20} />
                 <span>Login</span>
@@ -360,70 +424,96 @@ const LandingPage = () => {
             </div>
 
             {/* Contact Form with enhanced styling */}
-            <div className="lg:col-span-2">
-              <form onSubmit={handleSubmit} className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 border border-white">
-                <div className="grid md:grid-cols-2 gap-6 mb-6">
-                  <div className="group">
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                      Full Name
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      className="w-full px-4 py-3 rounded-lg bg-white/50 border border-gray-200 focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 outline-none transition-all"
-                      placeholder="John Doe"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      className="w-full px-4 py-3 rounded-lg bg-white/50 border border-gray-200 focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 outline-none transition-all"
-                      placeholder="john@example.com"
-                      required
-                    />
-                  </div>
-                </div>
+<div className="lg:col-span-2">
+  <form onSubmit={handleSubmit} className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 border border-white">
+    {formStatus.message && (
+      <div className={`mb-6 p-4 rounded-lg ${
+        formStatus.type === 'success' 
+          ? 'bg-green-50 border border-green-200 text-green-800'
+          : 'bg-red-50 border border-red-200 text-red-800'
+      }`}>
+        <p className="font-medium">
+          {formStatus.type === 'success' ? 'Success!' : 'Error!'}
+        </p>
+        <p className="text-sm">
+          {formStatus.message}
+        </p>
+      </div>
+    )}
 
-                <div className="mb-6">
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-                    Subject
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    className="w-full px-4 py-3 rounded-lg bg-white/50 border border-gray-200 focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 outline-none transition-all"
-                    placeholder="How can we help?"
-                    required
-                  />
-                </div>
+    <div className="grid md:grid-cols-2 gap-6 mb-6">
+      <div className="group">
+        <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
+          Full Name
+        </label>
+        <input
+          type="text"
+          id="fullName"
+          value={formData.fullName}
+          onChange={handleChange}
+          className="w-full px-4 py-3 rounded-lg bg-white/50 border border-gray-200 focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 outline-none transition-all"
+          placeholder="John Doe"
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+          Email Address
+        </label>
+        <input
+          type="email"
+          id="email"
+          value={formData.email}
+          onChange={handleChange}
+          className="w-full px-4 py-3 rounded-lg bg-white/50 border border-gray-200 focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 outline-none transition-all"
+          placeholder="john@example.com"
+          required
+        />
+      </div>
+    </div>
 
-                <div className="mb-6">
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    rows="4"
-                    className="w-full px-4 py-3 rounded-lg bg-white/50 border border-gray-200 focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 outline-none transition-all resize-none"
-                    placeholder="Your message here..."
-                    required
-                  ></textarea>
-                </div>
+    <div className="mb-6">
+      <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
+        Subject
+      </label>
+      <input
+        type="text"
+        id="subject"
+        value={formData.subject}
+        onChange={handleChange}
+        className="w-full px-4 py-3 rounded-lg bg-white/50 border border-gray-200 focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 outline-none transition-all"
+        placeholder="How can we help?"
+        required
+      />
+    </div>
 
-                <button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-yellow-600 to-orange-500 text-white px-6 py-3 rounded-lg hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 font-medium"
-                >
-                  <Send size={20} />
-                  <span>Send Message</span>
-                </button>
-              </form>
-            </div>
+    <div className="mb-6">
+      <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+        Message
+      </label>
+      <textarea
+        id="message"
+        value={formData.message}
+        onChange={handleChange}
+        rows="4"
+        className="w-full px-4 py-3 rounded-lg bg-white/50 border border-gray-200 focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 outline-none transition-all resize-none"
+        placeholder="Your message here..."
+        required
+      ></textarea>
+    </div>
+
+    <button
+      type="submit"
+      disabled={isSubmitting}
+      className={`w-full bg-gradient-to-r from-yellow-600 to-orange-500 text-white px-6 py-3 rounded-lg hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 font-medium ${
+        isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
+      }`}
+    >
+      <Send size={20} />
+      <span>{isSubmitting ? 'Sending...' : 'Send Message'}</span>
+    </button>
+  </form>
+</div>
           </div>
         </div>
       </section>
